@@ -1,22 +1,26 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-public class Schedule
+namespace Student_Section_ManagementSystemProject.Models
 {
-    public int Id { get; set; }
+    public class Schedule
+    {
+        public int Id { get; set; }
 
-    [Required]
-    [Display(Name = "Start Time")]
-    public DateTime StartTime { get; set; }
+        [Required]
+        [Display(Name = "Start Time")]
+        public DateTime StartTime { get; set; }
 
-    [Required]
-    [Display(Name = "End Time")]
-    public DateTime EndTime { get; set; }
+        [Required]
+        [Display(Name = "End Time")]
+        public DateTime EndTime { get; set; }
 
-    [Required]
-    [Display(Name = "Subject")]
-    public int SubjectId { get; set; } // Foreign Key
+        [Required]
+        [Display(Name = "Subject")]
+        public int SubjectId { get; set; } // Foreign Key
 
-    [ForeignKey("SubjectId")]
-    public Subject Subject { get; set; }
+        [ForeignKey("SubjectId")]
+        public Subject Subject { get; set; }
+    }
 }
+
