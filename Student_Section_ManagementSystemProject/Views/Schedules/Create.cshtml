@@ -26,9 +26,9 @@
 
 <form method="post">
     <div class="form-group">
-        <label asp-for="SubjectId"></label>
+        <label for="SubjectId">Subject</label>
         <select asp-for="SubjectId" asp-items="ViewBag.Subjects" class="form-control">
-            <option value="">Select Subject</option>
+            <option value="">-- Select Subject --</option>
         </select>
         <span asp-validation-for="SubjectId" class="text-danger"></span>
     </div>

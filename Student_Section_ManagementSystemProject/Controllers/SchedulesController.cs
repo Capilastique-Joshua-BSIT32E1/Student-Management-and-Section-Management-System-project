@@ -42,7 +42,7 @@ public class SchedulesController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Create(Schedule schedule)
     {
-        Console.WriteLine($"DEBUG: Received StartTime = {schedule.StartTime}, EndTime = {schedule.EndTime}");
+        Console.WriteLine($"DEBUG: StartTime = {schedule.StartTime}, EndTime = {schedule.EndTime}");
 
         // Ensure subject exists
         if (!_context.Subjects.Any(s => s.Id == schedule.SubjectId))
@@ -60,12 +60,14 @@ public class SchedulesController : Controller
         {
             _context.Schedules.Add(schedule);
             _context.SaveChanges();
-            TempData["ScheduleSuccessMessage"] = "Schedule successfully added!";
-            return RedirectToAction(nameof(Index));
+
+            TempData["SuccessMessage"] = "Schedule created successfully!";
+            return RedirectToAction("Index"); // ✅ Return after successful creation
         }
 
+        // This ensures all paths return a value
         ViewBag.Subjects = new SelectList(_context.Subjects, "Id", "Name", schedule.SubjectId);
-        TempData["ScheduleErrorMessage"] = "Failed to create schedule. Please check your inputs.";
+        TempData["ErrorMessage"] = "Failed to create schedule. Please check your inputs.";
         return View(schedule);
     }
 }
