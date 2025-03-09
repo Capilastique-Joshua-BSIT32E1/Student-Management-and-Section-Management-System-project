@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -26,11 +27,18 @@ namespace Student_Section_ManagementSystemProject.Models
 
         public List<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
 
-        // Custom validation for EndTime
+        // ✅ FIX: Custom validation for EndTime
         public static ValidationResult ValidateTime(DateTime endTime, ValidationContext context)
         {
             var instance = (Schedule)context.ObjectInstance;
-            if (instance.StartTime >= endTime)
+
+            // Convert to UTC to prevent timezone issues
+            DateTime startUtc = instance.StartTime.ToUniversalTime();
+            DateTime endUtc = endTime.ToUniversalTime();
+
+            Console.WriteLine($"DEBUG: StartTime = {startUtc}, EndTime = {endUtc}");
+
+            if (startUtc >= endUtc)
             {
                 return new ValidationResult("End time must be later than start time.");
             }

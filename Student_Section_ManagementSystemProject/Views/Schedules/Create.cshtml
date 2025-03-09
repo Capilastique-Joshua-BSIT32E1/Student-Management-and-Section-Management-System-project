@@ -35,22 +35,21 @@
 
     <div class="form-group">
         <label asp-for="StartTime"></label>
-        <input asp-for="StartTime" type="datetime-local" class="form-control" />
+        <input asp-for="StartTime" type="datetime-local" class="form-control"
+               value="@Model?.StartTime.ToString("yyyy-MM-ddTHH:mm")" />
         <span asp-validation-for="StartTime" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="EndTime"></label>
-        <input asp-for="EndTime" type="datetime-local" class="form-control" />
+        <input asp-for="EndTime" type="datetime-local" class="form-control"
+               value="@Model?.EndTime.ToString("yyyy-MM-ddTHH:mm")" />
         <span asp-validation-for="EndTime" class="text-danger"></span>
     </div>
 
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
 
 <style>
     body {

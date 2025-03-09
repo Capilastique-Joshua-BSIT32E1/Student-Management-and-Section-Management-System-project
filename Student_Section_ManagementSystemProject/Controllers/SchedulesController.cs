@@ -18,12 +18,12 @@ public class SchedulesController : Controller
     public IActionResult Index()
     {
         var schedules = _context.Schedules
-            .Select(s => new Schedule  // Return a Schedule object
+            .Select(s => new Schedule
             {
                 Id = s.Id,
                 StartTime = s.StartTime,
                 EndTime = s.EndTime,
-                Subject = s.Subject  // Ensure Subject is included
+                Subject = s.Subject
             })
             .ToList();
 
@@ -42,9 +42,18 @@ public class SchedulesController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Create(Schedule schedule)
     {
+        Console.WriteLine($"DEBUG: Received StartTime = {schedule.StartTime}, EndTime = {schedule.EndTime}");
+
+        // Ensure subject exists
         if (!_context.Subjects.Any(s => s.Id == schedule.SubjectId))
         {
             ModelState.AddModelError("SubjectId", "Selected subject does not exist.");
+        }
+
+        // ✅ FIX: Extra validation before saving
+        if (schedule.StartTime >= schedule.EndTime)
+        {
+            ModelState.AddModelError("EndTime", "End time must be later than start time.");
         }
 
         if (ModelState.IsValid)
