@@ -15,7 +15,6 @@ namespace Student_Section_ManagementSystemProject.Models
 
         [Required]
         [Display(Name = "End Time")]
-        [CustomValidation(typeof(Schedule), nameof(ValidateTime))]
         public DateTime EndTime { get; set; }
 
         [Required]
