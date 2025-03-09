@@ -148,7 +148,31 @@
 </style>
 
 <h2>Subjects</h2>
+
+@if (TempData["SubjectSuccessMessage"] != null)
+{
+    <div class="alert alert-success" id="successMessage">
+        @TempData["SubjectSuccessMessage"]
+    </div>
+}
+
+<script>
+    setTimeout(function () {
+        let successBox = document.getElementById('successMessage');
+        let errorBox = document.getElementById('errorMessage');
+
+        if (successBox) {
+            successBox.style.display = 'none';
+        }
+
+        if (errorBox) {
+            errorBox.style.display = 'none';
+        }
+    }, 2000); // Hides after 2 seconds
+</script>
 <a asp-action="Create" class="add-button">Add New Subject</a>
+
+
 
 <table class="subject-table">
     <tr>
@@ -202,33 +226,4 @@
             modal.style.display = "none";
         }
     }
-</script>
-
-@if (TempData["SubjectSuccessMessage"] != null)
-{
-    <div class="alert alert-success" id="successMessage">
-        @TempData["SubjectSuccessMessage"]
-    </div>
-}
-
-@if (TempData["SubjectErrorMessage"] != null)
-{
-    <div class="alert alert-danger" id="errorMessage">
-        @TempData["SubjectErrorMessage"]
-    </div>
-}
-
-<script>
-    setTimeout(function () {
-        let successBox = document.getElementById('successMessage');
-        let errorBox = document.getElementById('errorMessage');
-
-        if (successBox) {
-            successBox.style.display = 'none';
-        }
-
-        if (errorBox) {
-            errorBox.style.display = 'none';
-        }
-    }, 2000); // Hides after 2 seconds
 </script>

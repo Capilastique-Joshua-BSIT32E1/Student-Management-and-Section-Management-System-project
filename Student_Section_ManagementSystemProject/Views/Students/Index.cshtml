@@ -145,6 +145,30 @@
 </style>
 
 <h2>Student List</h2>
+
+@if (TempData["StudentSuccessMessage"] != null)
+{
+    <div class="alert alert-success" id="successMessage">
+        @TempData["StudentSuccessMessage"]
+    </div>
+}
+
+<script>
+    setTimeout(function () {
+        let successBox = document.getElementById('successMessage');
+        let errorBox = document.getElementById('errorMessage');
+
+        if (successBox) {
+            successBox.style.display = 'none';
+        }
+
+        if (errorBox) {
+            errorBox.style.display = 'none';
+        }
+    }, 2000); // Hides after 2 seconds
+</script>
+
+
 <a href="/Students/Create" class="add-button">Add New Student</a>
 
 <table class="student-table">
@@ -199,33 +223,4 @@
             modal.style.display = "none";
         }
     }
-</script>
-
-@if (TempData["StudentSuccessMessage"] != null)
-{
-    <div class="alert alert-success" id="successMessage">
-        @TempData["StudentSuccessMessage"]
-    </div>
-}
-
-@if (TempData["StudentErrorMessage"] != null)
-{
-    <div class="alert alert-danger" id="errorMessage">
-        @TempData["StudentErrorMessage"]
-    </div>
-}
-
-<script>
-    setTimeout(function () {
-        let successBox = document.getElementById('successMessage');
-        let errorBox = document.getElementById('errorMessage');
-
-        if (successBox) {
-            successBox.style.display = 'none';
-        }
-
-        if (errorBox) {
-            errorBox.style.display = 'none';
-        }
-    }, 2000); // Hides after 2 seconds
 </script>
