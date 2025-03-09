@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<Student_Section_ManagementSystemProject.Models.Schedule>
+
+@{
     ViewData["Title"] = "Schedule List";
 }
 
@@ -8,10 +10,19 @@
 
 @if (TempData["SuccessMessage"] != null)
 {
-    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    <div class="alert alert-success" id="successMessage">
+        @TempData["SuccessMessage"]
+    </div>
 }
 
-<table class="table">
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" id="errorMessage">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<table class="student-table">
     <thead>
         <tr>
             <th>Subject</th>
@@ -23,10 +34,99 @@
         @foreach (var schedule in Model)
         {
             <tr>
-                <td>@schedule.SubjectName</td>
+                <td>@schedule.Subject.Name</td>
                 <td>@schedule.StartTime.ToString("yyyy-MM-dd HH:mm")</td>
                 <td>@schedule.EndTime.ToString("yyyy-MM-dd HH:mm")</td>
             </tr>
         }
     </tbody>
 </table>
+
+<script>
+    // Hide alerts automatically after 2 seconds
+    setTimeout(function () {
+        let successBox = document.getElementById('successMessage');
+        let errorBox = document.getElementById('errorMessage');
+
+        if (successBox) {
+            successBox.style.display = 'none';
+        }
+
+        if (errorBox) {
+            errorBox.style.display = 'none';
+        }
+    }, 2000);
+</script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 5px;
+        padding: 20px;
+    }
+
+    h2 {
+        color: #333;
+        text-align: center;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    .add-button {
+        display: inline-block;
+        background-color: skyblue;
+        color: black;
+        padding: 5px 8px;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        margin-left: 88%;
+    }
+
+        .add-button:hover {
+            background-color: steelblue;
+            color: white;
+        }
+
+    .student-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+        .student-table th, .student-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .student-table th {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+        }
+
+        .student-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+    .alert {
+        padding: 5px;
+        background-color: #4CAF50;
+        color: white;
+        text-align: center;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .alert-success {
+        background-color: #28a745;
+    }
+
+    .alert-danger {
+        background-color: #dc3545;
+    }
+</style>
