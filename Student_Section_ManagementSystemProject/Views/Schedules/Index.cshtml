@@ -1,23 +1,30 @@
-﻿@model IEnumerable<Student_Section_ManagementSystemProject.Models.Schedule>
-<h2>Class Schedules</h2>
-<a href="/Schedules/Create">Create New Schedule</a>
-<table border="1">
-    <tr>
-        <th>Subject</th>
-        <th>Start Time</th>
-        <th>End Time</th>
-        <th>Actions</th>
-    </tr>
-    @foreach (var schedule in Model)
-    {
+﻿@{
+    ViewData["Title"] = "Schedule List";
+}
+
+<h2>Schedule List</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+<table class="table">
+    <thead>
         <tr>
-            <td>@schedule.Subject.Name</td>
-            <td>@schedule.StartTime</td>
-            <td>@schedule.EndTime</td>
-            <td>
-                <a href="/Enrollment/Enroll?scheduleId=@schedule.Id">Enroll Students</a> |
-                <a href="/Schedules/Delete/@schedule.Id">Delete</a>
-            </td>
+            <th>Subject</th>
+            <th>Start Time</th>
+            <th>End Time</th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (var schedule in Model)
+        {
+            <tr>
+                <td>@schedule.SubjectName</td>
+                <td>@schedule.StartTime.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@schedule.EndTime.ToString("yyyy-MM-dd HH:mm")</td>
+            </tr>
+        }
+    </tbody>
 </table>
