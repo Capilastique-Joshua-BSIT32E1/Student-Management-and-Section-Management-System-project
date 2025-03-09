@@ -41,30 +41,31 @@ public class SchedulesController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Create(Schedule schedule)
     {
-        // Validate Subject
         if (!_context.Subjects.Any(s => s.Id == schedule.SubjectId))
         {
             ModelState.AddModelError("SubjectId", "Selected subject does not exist.");
         }
 
-        // Validate StartTime & EndTime
         if (schedule.StartTime >= schedule.EndTime)
         {
             ModelState.AddModelError("EndTime", "End time must be later than start time.");
         }
 
-        // Check for Duplicate Schedule (Same subject, same time)
+        // Convert times to UTC to avoid time zone issues
+        DateTime startUtc = schedule.StartTime.ToUniversalTime();
+        DateTime endUtc = schedule.EndTime.ToUniversalTime();
+
         if (_context.Schedules.Any(s => s.SubjectId == schedule.SubjectId &&
-                                        s.StartTime == schedule.StartTime &&
-                                        s.EndTime == schedule.EndTime))
+                                        s.StartTime.ToUniversalTime() == startUtc &&
+                                        s.EndTime.ToUniversalTime() == endUtc))
         {
             ModelState.AddModelError("", "A schedule with the same subject and time already exists.");
         }
 
         if (ModelState.IsValid)
         {
-            _context.Schedules.Add(schedule); // ✅ Fix: Corrected entity reference
-            _context.SaveChanges(); // ✅ Fix: Removed incorrect '.'
+            _context.Schedules.Add(schedule);
+            _context.SaveChanges();
             TempData["ScheduleSuccessMessage"] = "Schedule added successfully!";
             return RedirectToAction("Index");
         }
