@@ -31,6 +31,7 @@ namespace Student_Section_ManagementSystemProject.Controllers
                 TempData["SuccessMessage"] = "Student successfully added!";
                 return RedirectToAction(nameof(Index));
             }
+            TempData["ErrorMessage"] = "Failed to add student. Please check your inputs.";
             return View(student);
         }
 
@@ -39,7 +40,8 @@ namespace Student_Section_ManagementSystemProject.Controllers
             var student = _context.Students.Find(id);
             if (student == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Student not found!";
+                return RedirectToAction(nameof(Index));
             }
             return View(student);
         }
@@ -51,9 +53,10 @@ namespace Student_Section_ManagementSystemProject.Controllers
             {
                 _context.Students.Update(student);
                 _context.SaveChanges();
-                TempData["SuccessMessage"] = "Student successfully updated!";
+                TempData["SuccessMessage"] = "Student details successfully updated!";
                 return RedirectToAction(nameof(Index));
             }
+            TempData["ErrorMessage"] = "Failed to update student. Please check your inputs.";
             return View(student);
         }
 
@@ -65,6 +68,10 @@ namespace Student_Section_ManagementSystemProject.Controllers
                 _context.Students.Remove(student);
                 _context.SaveChanges();
                 TempData["SuccessMessage"] = "Student successfully deleted!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Student not found!";
             }
             return RedirectToAction(nameof(Index));
         }
