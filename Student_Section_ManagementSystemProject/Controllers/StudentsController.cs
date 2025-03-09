@@ -14,7 +14,10 @@ namespace Student_Section_ManagementSystemProject.Controllers
             _context = context;
         }
 
-        public IActionResult Index() => View(_context.Students.ToList());
+        public IActionResult Index()
+        {
+            return View(_context.Students.ToList());
+        }
 
         public IActionResult Create() => View();
 
@@ -25,19 +28,33 @@ namespace Student_Section_ManagementSystemProject.Controllers
             {
                 _context.Students.Add(student);
                 _context.SaveChanges();
+                TempData["SuccessMessage"] = "Student successfully added!";
                 return RedirectToAction(nameof(Index));
             }
             return View(student);
         }
 
-        public IActionResult Edit(int id) => View(_context.Students.Find(id));
+        public IActionResult Edit(int id)
+        {
+            var student = _context.Students.Find(id);
+            if (student == null)
+            {
+                return NotFound();
+            }
+            return View(student);
+        }
 
         [HttpPost]
         public IActionResult Edit(Student student)
         {
-            _context.Students.Update(student);
-            _context.SaveChanges();
-            return RedirectToAction(nameof(Index));
+            if (ModelState.IsValid)
+            {
+                _context.Students.Update(student);
+                _context.SaveChanges();
+                TempData["SuccessMessage"] = "Student successfully updated!";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(student);
         }
 
         public IActionResult Delete(int id)
@@ -47,6 +64,7 @@ namespace Student_Section_ManagementSystemProject.Controllers
             {
                 _context.Students.Remove(student);
                 _context.SaveChanges();
+                TempData["SuccessMessage"] = "Student successfully deleted!";
             }
             return RedirectToAction(nameof(Index));
         }
