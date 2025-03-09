@@ -201,17 +201,17 @@
     }
 </script>
 
-@if (TempData["SuccessMessage"] != null)
+@if (TempData["StudentSuccessMessage"] != null)
 {
     <div class="alert alert-success">
-        @TempData["SuccessMessage"]
+        @TempData["StudentSuccessMessage"]
     </div>
 
 
-    @if (TempData["ErrorMessage"] != null)
+    @if (TempData["StudentErrorMessage"] != null)
     {
         <div class="alert alert-danger">
-            @TempData["ErrorMessage"]
+            @TempData["StudentErrorMessage"]
         </div>
     }
 
