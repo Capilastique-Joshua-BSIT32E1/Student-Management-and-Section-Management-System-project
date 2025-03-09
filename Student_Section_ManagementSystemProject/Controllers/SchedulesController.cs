@@ -42,29 +42,34 @@ public class SchedulesController : Controller
         // ✅ Ensure EndTime is later than StartTime
         if (schedule.EndTime <= schedule.StartTime)
         {
-            ModelState.AddModelError("EndTime", "End time must be later than start time.");
+            TempData["ScheduleErrorMessage"] = "End time must be later than start time.";
             ViewBag.Subjects = _context.Subjects.ToList();
             return View(schedule);
         }
 
-        // ✅ Check for overlapping schedules
-        bool isOverlapping = await _context.Schedules.AnyAsync(s =>
+        // ✅ Prevent Exact Duplicate Schedules
+        bool isDuplicate = await _context.Schedules.AnyAsync(s =>
             s.SubjectId == schedule.SubjectId &&
-            ((schedule.StartTime >= s.StartTime && schedule.StartTime < s.EndTime) ||
-             (schedule.EndTime > s.StartTime && schedule.EndTime <= s.EndTime) ||
-             (schedule.StartTime <= s.StartTime && schedule.EndTime >= s.EndTime))
+            s.StartTime == schedule.StartTime &&
+            s.EndTime == schedule.EndTime
         );
 
-        if (isOverlapping)
+        if (isDuplicate)
         {
-            ModelState.AddModelError("", "This schedule conflicts with an existing schedule.");
+            TempData["ScheduleErrorMessage"] = "This schedule already exists.";
             ViewBag.Subjects = _context.Subjects.ToList();
             return View(schedule);
         }
 
         _context.Schedules.Add(schedule);
         await _context.SaveChangesAsync();
+
+        Console.WriteLine($"✅ Schedule Created! Total Schedules: {_context.Schedules.Count()}");
+
+        // ✅ Store success message
+        TempData["ScheduleSuccessMessage"] = "Schedule added successfully!";
         return RedirectToAction("Index");
     }
+
 
 }

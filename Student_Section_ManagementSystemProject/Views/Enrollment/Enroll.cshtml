@@ -23,7 +23,11 @@
 
     <h3>Select Schedules</h3>
 
-    @if (ViewBag.Schedules != null && ViewBag.Schedules.Count > 0)
+    @if (ViewBag.Schedules == null || ViewBag.Schedules.Count == 0)
+    {
+        <p class="text-danger">⚠ No available schedules for enrollment. Please add a schedule.</p>
+    }
+    else
     {
         @foreach (var schedule in ViewBag.Schedules)
         {
@@ -33,15 +37,12 @@
                 <input type="checkbox" name="scheduleIds" value="@schedule.Id"
                        class="form-check-input" id="schedule_@schedule.Id" @(isFull ? "disabled" : "") />
                 <label class="form-check-label @(isFull ? "text-danger" : "")" for="schedule_@schedule.Id">
-                    @schedule.Subject.Name (@schedule.Capacity - @schedule.Enrollments.Count slots left)
+                    @schedule.Subject?.Name (@schedule.Capacity - @schedule.Enrollments.Count slots left)
                 </label>
             </div>
         }
     }
-    else
-    {
-        <p class="text-danger">⚠ No available schedules for enrollment.</p>
-    }
+
 
     <button type="submit" class="btn btn-primary mt-2">Enroll</button>
 </form>

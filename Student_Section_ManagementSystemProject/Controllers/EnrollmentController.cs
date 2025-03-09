@@ -37,21 +37,29 @@ public class EnrollmentController : Controller
         return View(schedule);
     }
 
-    // ✅ Multiple Enrollment View
     [HttpGet("Enroll-All")]
     public async Task<IActionResult> Enroll()
     {
-        var students = await _context.Students.ToListAsync();
+        ViewBag.Students = new SelectList(await _context.Students.ToListAsync(), "Id", "Name");
+
         var schedules = await _context.Schedules
-            .Include(s => s.Subject)
-            .Include(s => s.Enrollments)
+            .Include(s => s.Subject)   // Include Subject for better display
+            .Include(s => s.Enrollments) // Include Enrollments
             .ToListAsync();
 
-        ViewBag.Students = new SelectList(students, "Id", "Name");
-        ViewBag.Schedules = schedules;
+        // ✅ Debugging: Check if schedules exist
+        Console.WriteLine($"Schedules Count: {schedules.Count}");
 
+        if (!schedules.Any())
+        {
+            TempData["ErrorMessage"] = "No available schedules for enrollment. Please add a schedule.";
+        }
+
+        ViewBag.Schedules = schedules;
         return View();
     }
+
+
 
     // ✅ Post method for multiple enrollments
     [HttpPost("EnrollMultiple")]
@@ -72,7 +80,6 @@ public class EnrollmentController : Controller
         {
             var schedule = await _context.Schedules
                 .Include(s => s.Enrollments)
-                .ThenInclude(e => e.Student)
                 .FirstOrDefaultAsync(s => s.Id == scheduleId);
 
             if (schedule == null)
@@ -81,7 +88,7 @@ public class EnrollmentController : Controller
                 continue;
             }
 
-            // Check if student is already enrolled
+            // ✅ Check if student is already enrolled
             bool isAlreadyEnrolled = schedule.Enrollments.Any(e => e.StudentId == studentId);
             if (isAlreadyEnrolled)
             {
@@ -89,21 +96,23 @@ public class EnrollmentController : Controller
                 continue;
             }
 
-            // Check if schedule has open slots
-            if (schedule.Enrollments.Count >= schedule.Capacity)
+            // ✅ Ensure Schedule is Not Full (If you have capacity)
+            if (schedule.Capacity > 0 && schedule.Enrollments.Count >= schedule.Capacity)
             {
                 messages.Add($"❌ {schedule.Subject.Name} is full.");
                 continue;
             }
 
-            // Enroll the student
+            // ✅ Enroll the Student
             _context.Enrollments.Add(new Enrollment { ScheduleId = scheduleId, StudentId = studentId });
             messages.Add($"✅ Student successfully enrolled in {schedule.Subject.Name}.");
         }
 
         await _context.SaveChangesAsync();
+        Console.WriteLine("✅ Enrollment Process Completed");
 
         TempData["SuccessMessage"] = "<ul><li>" + string.Join("</li><li>", messages) + "</li></ul>";
         return RedirectToAction("Enroll-All");
     }
+
 }
