@@ -31,6 +31,15 @@ public class SubjectsController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Create(Subject subject)
     {
+        // Normalize name: Trim whitespace and convert to lowercase
+        subject.Name = subject.Name.Trim();
+
+        // Check if the name already exists (case-insensitive)
+        if (_context.Subjects.Any(s => s.Name.ToLower() == subject.Name.ToLower()))
+        {
+            ModelState.AddModelError("Name", "Subject name must be unique.");
+        }
+
         if (ModelState.IsValid)
         {
             _context.Subjects.Add(subject);
@@ -38,9 +47,11 @@ public class SubjectsController : Controller
             TempData["SubjectSuccessMessage"] = "Subject added successfully!";
             return RedirectToAction("Index");
         }
+
         TempData["SubjectErrorMessage"] = "Failed to add subject. Please check your inputs.";
         return View(subject);
     }
+
 
     // 4️⃣ Show Edit Subject Form
     public IActionResult Edit(int id)
@@ -57,8 +68,16 @@ public class SubjectsController : Controller
     // 5️⃣ Handle Subject Editing (POST)
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(Subject subject)
+    public IActionResult Edit(int id, Subject subject)
     {
+        subject.Name = subject.Name.Trim();
+
+        // Ensure uniqueness while allowing the same name for the same ID
+        if (_context.Subjects.Any(s => s.Name.ToLower() == subject.Name.ToLower() && s.Id != id))
+        {
+            ModelState.AddModelError("Name", "Subject name must be unique.");
+        }
+
         if (ModelState.IsValid)
         {
             _context.Subjects.Update(subject);
@@ -66,9 +85,11 @@ public class SubjectsController : Controller
             TempData["SubjectSuccessMessage"] = "Subject updated successfully!";
             return RedirectToAction("Index");
         }
+
         TempData["SubjectErrorMessage"] = "Failed to update subject. Please check your inputs.";
         return View(subject);
     }
+
 
     // 6️⃣ Handle Subject Deletion
     public IActionResult Delete(int id)

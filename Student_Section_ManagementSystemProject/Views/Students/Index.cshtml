@@ -201,26 +201,31 @@
     }
 </script>
 
-@if (TempData["StudentSuccessMessage"] != null)
+@if (TempData["SubjectSuccessMessage"] != null)
 {
-    <div class="alert alert-success">
-        @TempData["StudentSuccessMessage"]
+    <div class="alert alert-success" id="successMessage">
+        @TempData["SubjectSuccessMessage"]
     </div>
-
-
-    @if (TempData["StudentErrorMessage"] != null)
-    {
-        <div class="alert alert-danger">
-            @TempData["StudentErrorMessage"]
-        </div>
-    }
-
-    <script>
-        setTimeout(function () {
-            let alertBox = document.querySelector('.alert');
-            if (alertBox) {
-                alertBox.style.display = 'none';
-            }
-        }, 2000);
-    </script>
 }
+
+@if (TempData["SubjectErrorMessage"] != null)
+{
+    <div class="alert alert-danger" id="errorMessage">
+        @TempData["SubjectErrorMessage"]
+    </div>
+}
+
+<script>
+    setTimeout(function () {
+        let successBox = document.getElementById('successMessage');
+        let errorBox = document.getElementById('errorMessage');
+
+        if (successBox) {
+            successBox.style.display = 'none';
+        }
+
+        if (errorBox) {
+            errorBox.style.display = 'none';
+        }
+    }, 2000); // Hides after 2 seconds
+</script>
