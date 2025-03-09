@@ -88,6 +88,58 @@
     .alert-success {
         background-color: #28a745;
     }
+
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+        background-color: white;
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 8px;
+        width: 350px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        text-align: center;
+    }
+
+    .modal-buttons {
+        margin-top: 15px;
+    }
+
+        .modal-buttons a {
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+    .confirm-button {
+        background-color: red;
+        color: white;
+    }
+
+    .cancel-button {
+        background-color: gray;
+        color: white;
+    }
+
+    .confirm-button:hover {
+        background-color: darkred;
+    }
+
+    .cancel-button:hover {
+        background-color: #666;
+    }
 </style>
 
 <h2>Student List</h2>
@@ -106,17 +158,53 @@
             <td>@student.Email</td>
             <td>
                 <a href="/Students/Edit/@student.Id" class="edit-link">Edit</a> |
-                <a href="/Students/Delete/@student.Id" class="delete-link" onclick="return confirm('Are you sure you want to delete this student?');">Delete</a>
+                <a href="#" class="delete-link" onclick="showDeleteModal(@student.Id)">Delete</a>
             </td>
         </tr>
     }
-</table>    
+</table>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <p>Are you sure you want to delete this student?</p>
+        <div class="modal-buttons">
+            <a id="confirmDelete" class="confirm-button">Yes, Delete</a>
+            <a class="cancel-button" onclick="closeDeleteModal()">Cancel</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    let studentIdToDelete = 0;
+
+    function showDeleteModal(studentId) {
+        studentIdToDelete = studentId;
+        document.getElementById("deleteModal").style.display = "block";
+    }
+
+    function closeDeleteModal() {
+        document.getElementById("deleteModal").style.display = "none";
+    }
+
+    document.getElementById("confirmDelete").addEventListener("click", function () {
+        window.location.href = "/Students/Delete/" + studentIdToDelete;
+    });
+
+    window.onclick = function (event) {
+        let modal = document.getElementById("deleteModal");
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
 
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success">
         @TempData["SuccessMessage"]
     </div>
+
 
     @if (TempData["ErrorMessage"] != null)
     {

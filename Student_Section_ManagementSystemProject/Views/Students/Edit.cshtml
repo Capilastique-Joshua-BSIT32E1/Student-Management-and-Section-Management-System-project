@@ -1,21 +1,99 @@
 ﻿@model Student_Section_ManagementSystemProject.Models.Student
 
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 5px;
+        padding: 20px;
+    }
+
+    h2 {
+        color: #333;
+        text-align: center;
+        margin-top: 50px;
+        margin-bottom: 30px;
+    }
+
+    .edit-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .edit-card {
+        background: white;
+        padding: 25px;
+        width: 380px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-row {
+        margin-bottom: 18px;
+    }
+
+        .form-row label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .form-row input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+    .text-danger {
+        color: red;
+        font-size: 14px;
+    }
+
+    .form-actions {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .save-button {
+        width: 100%;
+        background-color: skyblue;
+        color: black;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+        .save-button:hover {
+            background-color: steelblue;
+            color: white;
+        }
+</style>
+
 <h2>Edit Student</h2>
 
-<div class="form-container">
-    <form method="post">
-        <input type="hidden" name="Id" value="@Model.Id" />
+<div class="edit-container">
+    <div class="edit-card">
+        <form method="post">
+            <input type="hidden" name="Id" value="@Model.Id" />
 
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="Name" value="@Model.Name" required />
-        </div>
+            <div class="form-row">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="Name" value="@Model.Name" required />
+            </div>
 
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="Email" value="@Model.Email" required />
-        </div>
+            <div class="form-row">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="Email" value="@Model.Email" required />
+            </div>
 
-        <button type="submit" class="save-button">Update</button>
-    </form>
+            <div class="form-actions">
+                <button type="submit" class="save-button">Update</button>
+            </div>
+        </form>
+    </div>
 </div>
