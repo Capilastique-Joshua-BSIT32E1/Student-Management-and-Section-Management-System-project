@@ -60,12 +60,12 @@ public class SchedulesController : Controller
         {
             _context.Schedules.Add(schedule);
             _context.SaveChanges();
-            TempData["SuccessMessage"] = "Schedule created successfully!";
-            return RedirectToAction("Index");
+            TempData["ScheduleSuccessMessage"] = "Schedule successfully added!";
+            return RedirectToAction(nameof(Index));
         }
 
         ViewBag.Subjects = new SelectList(_context.Subjects, "Id", "Name", schedule.SubjectId);
-        TempData["ErrorMessage"] = "Failed to create schedule. Please check your inputs.";
+        TempData["ScheduleErrorMessage"] = "Failed to create schedule. Please check your inputs.";
         return View(schedule);
     }
 }
