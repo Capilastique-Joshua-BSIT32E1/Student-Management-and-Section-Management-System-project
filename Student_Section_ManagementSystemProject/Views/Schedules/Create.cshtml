@@ -23,31 +23,22 @@
 </script>
 
 <div class="form-container">
-    <form method="post">
-        <div class="form-group">
-            <label for="SubjectId">Subject</label>
-            <select asp-for="SubjectId" asp-items="ViewBag.Subjects" class="form-control">
-                <option value="">-- Select Subject --</option>
-            </select>
-            <span asp-validation-for="SubjectId" class="text-danger"></span>
-        </div>
+    <form asp-action="Create" method="post">
+        <label>Subject:</label>
+        <select asp-for="SubjectId">
+            @foreach (var subject in ViewBag.Subjects)
+            {
+                <option value="@subject.Id">@subject.Name</option>
+            }
+        </select>
 
-        <div class="form-group">
-            <label asp-for="StartTime"></label>
-            <input asp-for="StartTime" type="time" class="form-control"
-                   value="@Model?.StartTime.ToString("HH:mm")" />
-            <span asp-validation-for="StartTime" class="text-danger"></span>
-        </div>
+        <label>Start Time:</label>
+        <input type="datetime-local" asp-for="StartTime" required />
 
-        <div class="form-group">
-            <label asp-for="EndTime"></label>
-            <input asp-for="EndTime" type="time" class="form-control"
-                   value="@Model?.EndTime.ToString("HH:mm")" />
-            <span asp-validation-for="EndTime" class="text-danger"></span>
-        </div>
+        <label>End Time:</label>
+        <input type="datetime-local" asp-for="EndTime" required />
 
-
-        <button type="submit" class="save-button">Save</button>
+        <button type="submit">Save</button>
     </form>
 </div>
 

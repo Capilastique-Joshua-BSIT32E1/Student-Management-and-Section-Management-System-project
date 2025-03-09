@@ -16,7 +16,7 @@
     @foreach (var schedule in Model)
     {
         <tr>
-            <td>@schedule.Subject.Name</td>
+            <td>@(schedule.Subject != null ? schedule.Subject.Name : "No Subject")</td>
             <td>@schedule.StartTime.ToString("hh:mm tt")</td>
             <td>@schedule.EndTime.ToString("hh:mm tt")</td>
         </tr>

@@ -14,18 +14,11 @@ namespace Student_Section_ManagementSystemProject.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Enrollment>()
-                .HasKey(e => new { e.StudentId, e.ScheduleId }); // Composite Key
-
-            modelBuilder.Entity<Enrollment>()
-                .HasOne(e => e.Student)
-                .WithMany(s => s.Enrollments)
-                .HasForeignKey(e => e.StudentId);
-
-            modelBuilder.Entity<Enrollment>()
-                .HasOne(e => e.Schedule)
-                .WithMany(s => s.Enrollments)
-                .HasForeignKey(e => e.ScheduleId);
+            modelBuilder.Entity<Schedule>()
+                .HasOne(s => s.Subject)
+                .WithMany()
+                .HasForeignKey(s => s.SubjectId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

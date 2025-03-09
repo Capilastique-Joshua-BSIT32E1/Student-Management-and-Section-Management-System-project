@@ -4,6 +4,7 @@ using Student_Section_ManagementSystemProject.Data;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Student_Section_ManagementSystemProject.Models; 
 
 public class ScheduleController : Controller
 {
@@ -32,25 +33,30 @@ public class ScheduleController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(Schedule schedule)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            _context.Schedules.Add(schedule);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            ViewBag.Subjects = _context.Subjects.ToList();
+            return View(schedule);
         }
-        ViewBag.Subjects = _context.Subjects.ToList();
-        return View(schedule);
-    }
 
-    // Delete Schedule
-    public async Task<IActionResult> Delete(int id)
+        // Check for overlapping schedules
+        bool isOverlapping = await _context.Schedules.AnyAsync(s =>
+            s.SubjectId == schedule.SubjectId &&
+            ((schedule.StartTime >= s.StartTime && schedule.StartTime < s.EndTime) ||
+             (schedule.EndTime > s.StartTime && schedule.EndTime <= s.EndTime) ||
+             (schedule.StartTime <= s.StartTime && schedule.EndTime >= s.EndTime))
+        );
+
+        if (isOverlapping)
         {
-        var schedule = await _context.Schedules.FindAsync(id);
-        if (schedule != null)
-            {
-            _context.Schedules.Remove(schedule);
-            await _context.SaveChangesAsync();
+            ModelState.AddModelError("", "This schedule conflicts with an existing schedule.");
+            ViewBag.Subjects = _context.Subjects.ToList();
+            return View(schedule);
         }
+
+        _context.Schedules.Add(schedule);
+        await _context.SaveChangesAsync();
         return RedirectToAction("Index");
     }
+
 }
