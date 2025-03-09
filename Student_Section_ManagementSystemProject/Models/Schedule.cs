@@ -1,15 +1,38 @@
-﻿using Student_Section_ManagementSystemProject.Models;
-using System.Collections.Generic;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Student_Section_ManagementSystemProject.Models
 {
     public class Schedule
     {
         public int Id { get; set; }
-        public int SubjectId { get; set; }
+
+        [Required]
+        [Display(Name = "Start Time")]
+        public DateTime StartTime { get; set; }
+
+        [Required]
+        [Display(Name = "End Time")]
+        [CustomValidation(typeof(Schedule), nameof(ValidateTime))]
+        public DateTime EndTime { get; set; }
+
+        [Required]
+        [Display(Name = "Subject")]
+        public int SubjectId { get; set; } // Foreign key
+
+        [ForeignKey("SubjectId")]
         public Subject Subject { get; set; }
-        public string StartTime { get; set; }
-        public string EndTime { get; set; }
-        public List<Student> EnrolledStudents { get; set; } = new List<Student>();
+
+        // Custom validation for EndTime
+        public static ValidationResult ValidateTime(DateTime endTime, ValidationContext context)
+        {
+            var instance = (Schedule)context.ObjectInstance;
+            if (instance.StartTime >= endTime)
+            {
+                return new ValidationResult("End time must be later than start time.");
+            }
+            return ValidationResult.Success;
+        }
     }
 }
