@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Student_Section_ManagementSystemProject.Data;
-using Student_Section_ManagementSystemProject.Models;
 using System.Linq;
 
-namespace Student_Section_ManagementSystemProject.Controllers
-{
     public class SubjectsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -14,9 +11,18 @@ namespace Student_Section_ManagementSystemProject.Controllers
             _context = context;
         }
 
-        public IActionResult Index() => View(_context.Subjects.ToList());
+    // 1️⃣ List All Subjects
+    public IActionResult Index()
+    {
+        var subjects = _context.Subjects.ToList();
+        return View(subjects);
+    }
 
-        public IActionResult Create() => View();
+    // 2️⃣ Show Create Subject Form
+    public IActionResult Create()
+    {
+        return View();
+    }
 
         [HttpPost]
         public IActionResult Create(Subject subject)
@@ -25,19 +31,32 @@ namespace Student_Section_ManagementSystemProject.Controllers
             {
                 _context.Subjects.Add(subject);
                 _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+            TempData["Success"] = "Subject added successfully!";
+            return RedirectToAction("Index");
             }
             return View(subject);
         }
 
-        public IActionResult Edit(int id) => View(_context.Subjects.Find(id));
+    // 4️⃣ Show Edit Subject Form
+    public IActionResult Edit(int id)
+    {
+        var subject = _context.Subjects.Find(id);
+        if (subject == null) return NotFound();
+        return View(subject);
+    }
 
         [HttpPost]
-        public IActionResult Edit(Subject subject)
+    [ValidateAntiForgeryToken]
+    public IActionResult Edit(int id, Subject subject)
+    {
+        if (ModelState.IsValid)
         {
             _context.Subjects.Update(subject);
             _context.SaveChanges();
-            return RedirectToAction(nameof(Index));
+            TempData["Success"] = "Subject updated successfully!";
+            return RedirectToAction("Index");
+        }
+        return View(subject);
         }
 
         public IActionResult Delete(int id)
@@ -47,8 +66,7 @@ namespace Student_Section_ManagementSystemProject.Controllers
             {
                 _context.Subjects.Remove(subject);
                 _context.SaveChanges();
-            }
-            return RedirectToAction(nameof(Index));
+            TempData["Success"] = "Subject deleted successfully!";
         }
     }
 }
