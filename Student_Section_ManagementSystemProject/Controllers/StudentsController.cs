@@ -28,10 +28,10 @@ namespace Student_Section_ManagementSystemProject.Controllers
             {
                 _context.Students.Add(student);
                 _context.SaveChanges();
-                TempData["SuccessMessage"] = "Student successfully added!";
+                TempData["StudentSuccessMessage"] = "Student successfully added!";
                 return RedirectToAction(nameof(Index));
             }
-            TempData["ErrorMessage"] = "Failed to add student. Please check your inputs.";
+            TempData["StudentErrorMessage"] = "Failed to add student. Please check your inputs.";
             return View(student);
         }
 
@@ -40,7 +40,7 @@ namespace Student_Section_ManagementSystemProject.Controllers
             var student = _context.Students.Find(id);
             if (student == null)
             {
-                TempData["ErrorMessage"] = "Student not found!";
+                TempData["StudentErrorMessage"] = "Student not found!";
                 return RedirectToAction(nameof(Index));
             }
             return View(student);
@@ -53,10 +53,10 @@ namespace Student_Section_ManagementSystemProject.Controllers
             {
                 _context.Students.Update(student);
                 _context.SaveChanges();
-                TempData["SuccessMessage"] = "Student details successfully updated!";
+                TempData["StudentSuccessMessage"] = "Student details successfully updated!";
                 return RedirectToAction(nameof(Index));
             }
-            TempData["ErrorMessage"] = "Failed to update student. Please check your inputs.";
+            TempData["StudentErrorMessage"] = "Failed to update student. Please check your inputs.";
             return View(student);
         }
 
@@ -67,11 +67,11 @@ namespace Student_Section_ManagementSystemProject.Controllers
             {
                 _context.Students.Remove(student);
                 _context.SaveChanges();
-                TempData["SuccessMessage"] = "Student successfully deleted!";
+                TempData["StudentSuccessMessage"] = "Student successfully deleted!";
             }
             else
             {
-                TempData["ErrorMessage"] = "Student not found!";
+                TempData["StudentErrorMessage"] = "Student not found!";
             }
             return RedirectToAction(nameof(Index));
         }
