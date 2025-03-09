@@ -17,16 +17,8 @@ public class SchedulesController : Controller
     // 1️⃣ List All Schedules
     public IActionResult Index()
     {
-        var schedules = _context.Schedules
-            .Select(s => new Schedule
-            {
-                Id = s.Id,
-                StartTime = s.StartTime,
-                EndTime = s.EndTime,
-                Subject = s.Subject
-            })
-            .ToList();
-
+        TempData.Keep("ScheduleSuccessMessage"); // Persist TempData
+        var schedules = _context.Schedules.ToList();
         return View(schedules);
     }
 
@@ -42,32 +34,34 @@ public class SchedulesController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Create(Schedule schedule)
     {
-        Console.WriteLine($"DEBUG: StartTime = {schedule.StartTime}, EndTime = {schedule.EndTime}");
-
-        // Ensure subject exists
+        // Validate Subject
         if (!_context.Subjects.Any(s => s.Id == schedule.SubjectId))
         {
             ModelState.AddModelError("SubjectId", "Selected subject does not exist.");
         }
 
-        // ✅ FIX: Extra validation before saving
+        // Validate StartTime & EndTime
         if (schedule.StartTime >= schedule.EndTime)
         {
             ModelState.AddModelError("EndTime", "End time must be later than start time.");
+        }
+
+        // Check for Duplicate Schedule (Same subject, same time)
+        if (_context.Schedules.Any(s => s.SubjectId == schedule.SubjectId && s.StartTime == schedule.StartTime && s.EndTime == schedule.EndTime))
+        {
+            ModelState.AddModelError("", "A schedule with the same subject and time already exists.");
         }
 
         if (ModelState.IsValid)
         {
             _context.Schedules.Add(schedule);
             _context.SaveChanges();
-
-            TempData["SuccessMessage"] = "Schedule created successfully!";
-            return RedirectToAction("Index"); // ✅ Return after successful creation
+            TempData["ScheduleSuccessMessage"] = "Schedule added successfully!";
+            return RedirectToAction("Index");
         }
 
-        // This ensures all paths return a value
+        TempData["ScheduleErrorMessage"] = "Failed to create schedule. Please check your inputs.";
         ViewBag.Subjects = new SelectList(_context.Subjects, "Id", "Name", schedule.SubjectId);
-        TempData["ErrorMessage"] = "Failed to create schedule. Please check your inputs.";
         return View(schedule);
     }
 }
