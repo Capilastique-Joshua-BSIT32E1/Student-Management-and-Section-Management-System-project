@@ -3,7 +3,7 @@
     ViewData["Title"] = "Enroll Students";
 }
 
-<h2>Enroll Students in @Model.Subject.Name</h2>
+<h2>Enroll Student in Available Schedules</h2>
 
 @if (TempData["SuccessMessage"] != null)
 {
@@ -14,26 +14,32 @@
     <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
 }
 
-<form asp-action="Enroll" method="post">
-    <input type="hidden" name="scheduleId" value="@Model.Id" />
+<form asp-controller="Enrollment" asp-action="EnrollMultiple" method="post">
     <div class="form-group">
         <label for="studentId">Select Student</label>
-        <select name="studentId" class="form-control" asp-items="ViewBag.Students"></select>
+        <select name="studentId" class="form-control" asp-items="ViewBag.Students">
+            <option value="">-- Select a Student --</option>
+        </select>
     </div>
+
+    <h3>Select Schedules</h3>
+
+    @if (ViewBag.Schedules != null && ViewBag.Schedules.Count > 0)
+    {
+        @foreach (var schedule in ViewBag.Schedules)
+        {
+            <div class="form-check">
+                <input type="checkbox" name="scheduleIds" value="@schedule.Id" class="form-check-input" id="schedule_@schedule.Id" />
+                <label class="form-check-label" for="schedule_@schedule.Id">
+                    @schedule.Subject.Name (@schedule.Capacity - @schedule.Enrollments.Count slots left)
+                </label>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-danger">⚠ No available schedules for enrollment.</p>
+    }
+
     <button type="submit" class="btn btn-primary mt-2">Enroll</button>
 </form>
-
-<h3>Currently Enrolled Students</h3>
-<ul class="list-group">
-    @foreach (var enrollment in Model.Enrollments)
-    {
-        <li class="list-group-item d-flex justify-content-between">
-            @enrollment.Student.Name
-            <form asp-action="Unenroll" method="post">
-                <input type="hidden" name="scheduleId" value="@Model.Id" />
-                <input type="hidden" name="studentId" value="@enrollment.StudentId" />
-                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
-            </form>
-        </li>
-    }
-</ul>

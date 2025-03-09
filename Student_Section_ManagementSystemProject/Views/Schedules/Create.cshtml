@@ -24,21 +24,29 @@
 
 <div class="form-container">
     <form asp-action="Create" method="post">
-        <label>Subject:</label>
-        <select asp-for="SubjectId">
-            @foreach (var subject in ViewBag.Subjects)
-            {
-                <option value="@subject.Id">@subject.Name</option>
-            }
-        </select>
+        <div class="form-group">
+            <label for="SubjectId">Subject:</label>
+            <select asp-for="SubjectId" id="SubjectId" class="input-field">
+                @foreach (var subject in ViewBag.Subjects)
+                {
+                    <option value="@subject.Id">@subject.Name</option>
+                }
+            </select>
+        </div>
 
-        <label>Start Time:</label>
-        <input type="datetime-local" asp-for="StartTime" required />
+        <div class="form-group">
+            <label for="StartTime">Start Time:</label>
+            <input type="datetime-local" asp-for="StartTime" id="StartTime" class="input-field" required />
+        </div>
 
-        <label>End Time:</label>
-        <input type="datetime-local" asp-for="EndTime" required />
+        <div class="form-group">
+            <label for="EndTime">End Time:</label>
+            <input type="datetime-local" asp-for="EndTime" id="EndTime" class="input-field" required />
+        </div>
 
-        <button type="submit">Save</button>
+        <div class="form-actions">
+            <button type="submit" class="save-button">Save</button>
+        </div>
     </form>
 </div>
 
@@ -70,22 +78,17 @@
         margin-bottom: 15px;
     }
 
-        .form-group label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
 
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-    .text-danger {
-        color: red;
-        font-size: 14px;
+    input, select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
     }
 
     .save-button {

@@ -6,6 +6,7 @@ using Student_Section_ManagementSystemProject.Models;
 using System.Linq;
 using System.Threading.Tasks;
 
+[Route("Enrollment")]
 public class EnrollmentController : Controller
 {
     private readonly ApplicationDbContext _context;
@@ -15,7 +16,8 @@ public class EnrollmentController : Controller
         _context = context;
     }
 
-    // Display Enrollment Page
+    // ✅ Route to Enroll a Student in a Specific Schedule (Single Enrollment)
+    [HttpGet("Enroll")]
     public async Task<IActionResult> Enroll(int scheduleId)
     {
         var schedule = await _context.Schedules
@@ -30,61 +32,78 @@ public class EnrollmentController : Controller
             return RedirectToAction("Index", "Schedules");
         }
 
-        ViewBag.Students = new SelectList(_context.Students, "Id", "Name");
+        ViewBag.Students = new SelectList(await _context.Students.ToListAsync(), "Id", "Name");
         return View(schedule);
     }
 
-    // Handle Enrollment
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Enroll(int scheduleId, int studentId)
+    // ✅ New Route to Enroll in Multiple Schedules (Multiple Enrollment)
+    [HttpGet("Enroll-All")]
+    public async Task<IActionResult> Enroll()
     {
-        var schedule = await _context.Schedules.FindAsync(scheduleId);
+        ViewBag.Students = new SelectList(await _context.Students.ToListAsync(), "Id", "Name");
+
+        // ✅ Ensure ViewBag.Schedules is properly assigned
+        ViewBag.Schedules = await _context.Schedules
+            .Include(s => s.Subject)
+            .Include(s => s.Enrollments)
+            .ToListAsync();
+
+        return View();
+    }
+
+    // ✅ Post method for multiple enrollments
+    [HttpPost("EnrollMultiple")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EnrollMultiple(int studentId, List<int> scheduleIds)
+    {
         var student = await _context.Students.FindAsync(studentId);
 
-        if (schedule == null || student == null)
+        if (student == null || scheduleIds == null || !scheduleIds.Any())
         {
-            TempData["ErrorMessage"] = "Invalid schedule or student.";
-            return RedirectToAction("Index", "Schedules");
+            TempData["ErrorMessage"] = "Invalid student or no schedules selected.";
+            return RedirectToAction("Enroll-All");
         }
 
-        // Check if student is already enrolled
-        bool isAlreadyEnrolled = await _context.Enrollments
-            .AnyAsync(e => e.ScheduleId == scheduleId && e.StudentId == studentId);
+        List<string> messages = new List<string>();
 
-        if (isAlreadyEnrolled)
+        foreach (var scheduleId in scheduleIds)
         {
-            TempData["ErrorMessage"] = "Student is already enrolled in this schedule.";
-        }
-        else
-        {
+            var schedule = await _context.Schedules
+                .Include(s => s.Enrollments)
+                .FirstOrDefaultAsync(s => s.Id == scheduleId);
+
+            if (schedule == null)
+            {
+                messages.Add($"Schedule ID {scheduleId} not found.");
+                continue;
+            }
+
+            // Check if student is already enrolled
+            bool isAlreadyEnrolled = await _context.Enrollments
+                .AnyAsync(e => e.ScheduleId == scheduleId && e.StudentId == studentId);
+
+            if (isAlreadyEnrolled)
+            {
+                messages.Add($"Student is already enrolled in {schedule.Subject.Name}.");
+                continue;
+            }
+
+            // Check if schedule has open slots
+            if (schedule.Enrollments.Count >= schedule.Capacity)
+            {
+                messages.Add($"{schedule.Subject.Name} is full.");
+                continue;
+            }
+
+            // Enroll the student
             _context.Enrollments.Add(new Enrollment { ScheduleId = scheduleId, StudentId = studentId });
-            await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Student enrolled successfully!";
+            messages.Add($"Student enrolled in {schedule.Subject.Name}.");
         }
 
-        return RedirectToAction("Enroll", new { scheduleId });
+        await _context.SaveChangesAsync();
+
+        TempData["SuccessMessage"] = string.Join("<br>", messages);
+        return RedirectToAction("Enroll-All");
     }
 
-    // Handle Unenrollment
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Unenroll(int scheduleId, int studentId)
-    {
-        var enrollment = await _context.Enrollments
-            .FirstOrDefaultAsync(e => e.ScheduleId == scheduleId && e.StudentId == studentId);
-
-        if (enrollment != null)
-        {
-            _context.Enrollments.Remove(enrollment);
-            await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Student removed from schedule.";
-        }
-        else
-        {
-            TempData["ErrorMessage"] = "Enrollment not found.";
-        }
-
-        return RedirectToAction("Enroll", new { scheduleId });
-    }
 }
