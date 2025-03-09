@@ -18,12 +18,12 @@ public class SchedulesController : Controller
     public IActionResult Index()
     {
         var schedules = _context.Schedules
-            .Select(s => new
+            .Select(s => new Schedule  // Return a Schedule object
             {
-                s.Id,
-                s.StartTime,
-                s.EndTime,
-                SubjectName = s.Subject.Name
+                Id = s.Id,
+                StartTime = s.StartTime,
+                EndTime = s.EndTime,
+                Subject = s.Subject  // Ensure Subject is included
             })
             .ToList();
 
