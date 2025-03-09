@@ -60,7 +60,6 @@ public class SchedulesController : Controller
         // ✅ Time validation: Handle cases where end time is on the next day
         if (startTime >= endTime)
         {
-            // If EndTime is smaller, assume it's for the next day
             if (schedule.EndTime.Hour < schedule.StartTime.Hour)
             {
                 schedule.EndTime = schedule.EndTime.AddDays(1);

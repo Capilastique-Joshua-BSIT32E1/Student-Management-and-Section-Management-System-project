@@ -17,6 +17,7 @@ namespace Student_Section_ManagementSystemProject.Models
         [Display(Name = "End Time")]
         public DateTime EndTime { get; set; }
 
+
         [Required]
         [Display(Name = "Subject")]
         public int SubjectId { get; set; } // Foreign key
