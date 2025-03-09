@@ -1,9 +1,76 @@
 ﻿@model Student_Section_ManagementSystemProject.Models.Student
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 5px;
+        padding: 20px;
+    }
+
+    h2 {
+        color: #333;
+        text-align: center;
+        margin-top: 50px;
+        margin-bottom: 30px;
+    }
+
+    .form-container {
+        background: white;
+        padding: 20px;
+        width: 350px;
+        margin: 0 auto;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .save-button {
+        width: 100%;
+        background-color: skyblue;
+        color: black;
+        padding: 8px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .save-button:hover {
+        background-color: steelblue;
+        color: white;
+    }
+</style>
+
+
 <h2>Add Student</h2>
-<form method="post">
-    <label>Name:</label>
-    <input type="text" name="Name" required />
-    <label>Email:</label>
-    <input type="email" name="Email" required />
-    <button type="submit">Save</button>
-</form>
+
+<div class="form-container">
+    <form method="post">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="Name" required />
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="Email" required />
+        </div>
+        <button type="submit" class="save-button">Save</button>
+    </form>
+</div>
