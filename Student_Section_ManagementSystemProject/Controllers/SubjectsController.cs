@@ -15,7 +15,7 @@ public class SubjectsController : Controller
     // 1️⃣ List All Subjects
     public IActionResult Index()
     {
-        TempData.Keep("SuccessMessage"); // Ensures TempData persists until displayed
+        TempData.Keep("SubjectSuccessMessage"); // Ensures TempData persists until displayed
         var subjects = _context.Subjects.ToList();
         return View(subjects);
     }
@@ -35,10 +35,10 @@ public class SubjectsController : Controller
         {
             _context.Subjects.Add(subject);
             _context.SaveChanges();
-            TempData["SuccessMessage"] = "Subject added successfully!";
+            TempData["SubjectSuccessMessage"] = "Subject added successfully!";
             return RedirectToAction("Index");
         }
-        TempData["ErrorMessage"] = "Failed to add subject. Please check your inputs.";
+        TempData["SubjectErrorMessage"] = "Failed to add subject. Please check your inputs.";
         return View(subject);
     }
 
@@ -48,7 +48,7 @@ public class SubjectsController : Controller
         var subject = _context.Subjects.Find(id);
         if (subject == null)
         {
-            TempData["ErrorMessage"] = "Subject not found!";
+            TempData["SubjectErrorMessage"] = "Subject not found!";
             return RedirectToAction("Index");
         }
         return View(subject);
@@ -63,10 +63,10 @@ public class SubjectsController : Controller
         {
             _context.Subjects.Update(subject);
             _context.SaveChanges();
-            TempData["SuccessMessage"] = "Subject updated successfully!";
+            TempData["SubjectSuccessMessage"] = "Subject updated successfully!";
             return RedirectToAction("Index");
         }
-        TempData["ErrorMessage"] = "Failed to update subject. Please check your inputs.";
+        TempData["SubjectErrorMessage"] = "Failed to update subject. Please check your inputs.";
         return View(subject);
     }
 
@@ -78,11 +78,11 @@ public class SubjectsController : Controller
         {
             _context.Subjects.Remove(subject);
             _context.SaveChanges();
-            TempData["SuccessMessage"] = "Subject successfully deleted!";
+            TempData["SubjectSuccessMessage"] = "Subject successfully deleted!";
         }
         else
         {
-            TempData["ErrorMessage"] = "Subject not found!";
+            TempData["SubjectErrorMessage"] = "Subject not found!";
         }
         return RedirectToAction("Index");
     }
