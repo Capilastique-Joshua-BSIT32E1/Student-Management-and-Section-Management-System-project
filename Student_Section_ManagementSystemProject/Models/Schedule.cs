@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Student_Section_ManagementSystemProject.Models
-{
     public class Schedule
     {
         public int Id { get; set; }
@@ -17,10 +15,9 @@ namespace Student_Section_ManagementSystemProject.Models
         [Display(Name = "End Time")]
         public DateTime EndTime { get; set; }
 
-
         [Required]
         [Display(Name = "Subject")]
-        public int SubjectId { get; set; } // Foreign key
+    public int SubjectId { get; set; } // Foreign Key
 
         [ForeignKey("SubjectId")]
         public Subject Subject { get; set; }
@@ -35,7 +32,6 @@ namespace Student_Section_ManagementSystemProject.Models
             if (instance.StartTime == default || endTime == default)
             {
                 return new ValidationResult("Invalid time values.");
-            }
 
             // ✅ Fix: If endTime is earlier than startTime, assume it's the next day
             if (instance.StartTime.TimeOfDay >= endTime.TimeOfDay)
