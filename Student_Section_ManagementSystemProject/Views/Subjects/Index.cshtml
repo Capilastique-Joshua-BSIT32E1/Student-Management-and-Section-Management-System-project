@@ -194,6 +194,14 @@
         @TempData["SuccessMessage"]
     </div>
 
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
     <script>
         setTimeout(function () {
             let alertBox = document.querySelector('.alert');
