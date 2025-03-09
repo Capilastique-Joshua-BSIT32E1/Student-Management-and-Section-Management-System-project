@@ -15,31 +15,31 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 var app = builder.Build();
 
-// Seed test data before running the app
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+//// Seed test data before running the app
+//using (var scope = app.Services.CreateScope())
+//{
+//    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-    // Seed Subjects if empty
-    if (!context.Subjects.Any())
-    {
-        context.Subjects.AddRange(
-            new Subject { Name = "Mathematics", Description = "Basic Math" },
-            new Subject { Name = "Science", Description = "Physics & Chemistry" }
-        );
-        context.SaveChanges();
-    }
+//    // Seed Subjects if empty
+//    if (!context.Subjects.Any())
+//    {
+//        context.Subjects.AddRange(
+//            new Subject { Name = "Mathematics", Description = "Basic Math" },
+//            new Subject { Name = "Science", Description = "Physics & Chemistry" }
+//        );
+//        context.SaveChanges();
+//    }
 
-    // Seed Students if empty
-    if (!context.Students.Any())
-    {
-        context.Students.AddRange(
-            new Student { Name = "John Doe", Email = "john@example.com" },
-            new Student { Name = "Jane Smith", Email = "jane@example.com" }
-        );
-        context.SaveChanges();
-    }
-}
+//    // Seed Students if empty
+//    if (!context.Students.Any())
+//    {
+//        context.Students.AddRange(
+//            new Student { Name = "John Doe", Email = "john@example.com" },
+//            new Student { Name = "Jane Smith", Email = "jane@example.com" }
+//        );
+//        context.SaveChanges();
+//    }
+//}
 
 // Middleware configuration
 if (!app.Environment.IsDevelopment())
