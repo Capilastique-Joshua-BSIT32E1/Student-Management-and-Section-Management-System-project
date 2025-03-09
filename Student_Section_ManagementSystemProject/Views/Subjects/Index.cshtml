@@ -193,7 +193,6 @@
     <div class="alert alert-success">
         @TempData["SuccessMessage"]
     </div>
-}
 
 @if (TempData["ErrorMessage"] != null)
 {
@@ -204,9 +203,9 @@
 
 <script>
     setTimeout(function () {
-        let alerts = document.querySelectorAll('.alert');
-        alerts.forEach(alert => {
-            alert.style.display = 'none';
-        });
-    }, 2000); // Increase to 5 seconds
+            let alertBox = document.querySelector('.alert');
+            if (alertBox) {
+                alertBox.style.display = 'none';
+            }
+        }, 2000);
 </script>
