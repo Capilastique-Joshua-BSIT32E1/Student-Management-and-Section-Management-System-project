@@ -7,27 +7,20 @@
 <h2>Schedule List</h2>
 
 <a href="/Schedules/Create" class="add-button">Add New Schedule</a>
-
-
-<table class="table">
-    <thead>
+<table class="student-table">
+    <tr>
+        <th>Subject</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+    </tr>
+    @foreach (var schedule in Model)
+    {
         <tr>
-            <th>Subject</th>
-            <th>Start Time</th>
-            <th>End Time</th>
-            <th>Actions</th>
+            <td>@schedule.Subject.Name</td>
+            <td>@schedule.StartTime.ToString("hh:mm tt")</td>
+            <td>@schedule.EndTime.ToString("hh:mm tt")</td>
         </tr>
-    </thead>
-    <tbody>
-        @foreach (var schedule in Model)
-        {
-            <tr>
-                <td>@schedule.Subject.Name</td>
-                <td>@schedule.StartTime.ToString("hh:mm tt")</td>
-                <td>@schedule.EndTime.ToString("hh:mm tt")</td>
-            </tr>
-        }
-    </tbody>
+    }
 </table>
 
 @if (TempData["ScheduleSuccessMessage"] != null)
