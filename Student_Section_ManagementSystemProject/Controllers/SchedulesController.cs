@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Student_Section_ManagementSystemProject.Data;
 using Student_Section_ManagementSystemProject.Models;
+using System;
 using System.Linq;
 
-namespace Student_Section_ManagementSystemProject.Controllers
-{
     public class SchedulesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -15,11 +14,25 @@ namespace Student_Section_ManagementSystemProject.Controllers
             _context = context;
         }
 
-        public IActionResult Index() => View(_context.Schedules.Include(s => s.Subject).ToList());
+    // 1️⃣ List All Schedules
+    public IActionResult Index()
+    {
+        var schedules = _context.Schedules
+            .Select(s => new
+            {
+                s.Id,
+                s.StartTime,
+                s.EndTime,
+                SubjectName = s.Subject.Name
+            })
+            .ToList();
+
+        return View(schedules);
+    }
 
         public IActionResult Create()
         {
-            ViewBag.Subjects = _context.Subjects.ToList();
+        ViewBag.Subjects = new SelectList(_context.Subjects, "Id", "Name");
             return View();
         }
 
@@ -30,20 +43,8 @@ namespace Student_Section_ManagementSystemProject.Controllers
             {
                 _context.Schedules.Add(schedule);
                 _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+            TempData["SuccessMessage"] = "Schedule created successfully!";
+            return RedirectToAction("Index");
             }
             return View(schedule);
         }
-
-        public IActionResult Delete(int id)
-        {
-            var schedule = _context.Schedules.Find(id);
-            if (schedule != null)
-            {
-                _context.Schedules.Remove(schedule);
-                _context.SaveChanges();
-            }
-            return RedirectToAction(nameof(Index));
-        }
-    }
-}
