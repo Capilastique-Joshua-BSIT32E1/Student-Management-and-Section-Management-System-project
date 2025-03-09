@@ -1,7 +1,73 @@
 ﻿@model IEnumerable<Student_Section_ManagementSystemProject.Models.Student>
+
+   <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 20px;
+        padding: 20px;
+    }
+
+    h2 {
+        color: #333;
+    }
+
+    .add-button {
+        display: inline-block;
+        background-color: #28a745;
+        color: white;
+        padding: 8px 12px;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .add-button:hover {
+        background-color: #218838;
+    }
+
+    .student-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .student-table th, .student-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .student-table th {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .student-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .edit-link {
+        color: #ffc107;
+        text-decoration: none;
+    }
+
+    .delete-link {
+        color: #dc3545;
+        text-decoration: none;
+    }
+
+    .edit-link:hover, .delete-link:hover {
+        text-decoration: underline;
+    }
+</style>
+
+
 <h2>Student List</h2>
-<a href="/Students/Create">Add New Student</a>
-<table border="1">
+<a href="/Students/Create" class="add-button">Add New Student</a>
+
+<table class="student-table">
     <tr>
         <th>Name</th>
         <th>Email</th>
@@ -13,8 +79,8 @@
             <td>@student.Name</td>
             <td>@student.Email</td>
             <td>
-                <a href="/Students/Edit/@student.Id">Edit</a> |
-                <a href="/Students/Delete/@student.Id">Delete</a>
+                <a href="/Students/Edit/@student.Id" class="edit-link">Edit</a> |
+                <a href="/Students/Delete/@student.Id" class="delete-link">Delete</a>
             </td>
         </tr>
     }
