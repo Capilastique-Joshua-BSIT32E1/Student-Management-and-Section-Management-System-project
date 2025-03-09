@@ -13,6 +13,6 @@ namespace Student_Section_ManagementSystemProject.Models
         [EmailAddress(ErrorMessage = "Invalid email format.")]
         public string Email { get; set; }
 
-        public List<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
+        public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
     }
 }

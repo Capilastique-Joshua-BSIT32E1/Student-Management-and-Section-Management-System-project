@@ -1,5 +1,4 @@
-﻿@* @model Student_Section_ManagementSystemProject.Models.Schedule
-
+﻿@model Student_Section_ManagementSystemProject.Models.Schedule
 @{
     ViewData["Title"] = "Enroll Students";
 }
@@ -10,45 +9,31 @@
 {
     <div class="alert alert-success">@TempData["SuccessMessage"]</div>
 }
-
 @if (TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
 }
 
-<form method="post" asp-action="Enroll">
+<form asp-action="Enroll" method="post">
     <input type="hidden" name="scheduleId" value="@Model.Id" />
-
     <div class="form-group">
-        <label>Select Student</label>
-        <select name="studentId" asp-items="ViewBag.Students" class="form-control"></select>
+        <label for="studentId">Select Student</label>
+        <select name="studentId" class="form-control" asp-items="ViewBag.Students"></select>
     </div>
-
-    <button type="submit" class="btn btn-primary">Enroll</button>
+    <button type="submit" class="btn btn-primary mt-2">Enroll</button>
 </form>
 
-<h3>Enrolled Students</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Student Name</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var enrollment in Model.Enrollments)
-        {
-            <tr>
-                <td>@enrollment.Student.Name</td>
-                <td>
-                    <form method="post" asp-action="Unenroll">
-                        <input type="hidden" name="scheduleId" value="@Model.Id" />
-                        <input type="hidden" name="studentId" value="@enrollment.Student.Id" />
-                        <button type="submit" class="btn btn-danger">Remove</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
- *@
+<h3>Currently Enrolled Students</h3>
+<ul class="list-group">
+    @foreach (var enrollment in Model.Enrollments)
+    {
+        <li class="list-group-item d-flex justify-content-between">
+            @enrollment.Student.Name
+            <form asp-action="Unenroll" method="post">
+                <input type="hidden" name="scheduleId" value="@Model.Id" />
+                <input type="hidden" name="studentId" value="@enrollment.StudentId" />
+                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+            </form>
+        </li>
+    }
+</ul>

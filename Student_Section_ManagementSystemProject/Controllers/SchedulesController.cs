@@ -6,11 +6,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Student_Section_ManagementSystemProject.Models; 
 
-public class ScheduleController : Controller
+public class SchedulesController : Controller
 {
     private readonly ApplicationDbContext _context;
 
-    public ScheduleController(ApplicationDbContext context)
+    public SchedulesController(ApplicationDbContext context)
     {
         _context = context;
     }
