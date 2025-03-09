@@ -9,12 +9,13 @@
 <a href="/Schedules/Create" class="add-button">Add New Schedule</a>
 
 
-<table class="student-table">
+<table class="table">
     <thead>
         <tr>
             <th>Subject</th>
             <th>Start Time</th>
             <th>End Time</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -22,8 +23,8 @@
         {
             <tr>
                 <td>@schedule.Subject.Name</td>
-                <td>@schedule.StartTime.ToString("yyyy-MM-dd HH:mm")</td>
-                <td>@schedule.EndTime.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@schedule.StartTime.ToString("hh:mm tt")</td>
+                <td>@schedule.EndTime.ToString("hh:mm tt")</td>
             </tr>
         }
     </tbody>
