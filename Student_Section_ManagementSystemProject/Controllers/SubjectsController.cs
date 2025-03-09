@@ -35,7 +35,12 @@ public class SubjectsController : Controller
         subject.Name = subject.Name.Trim();
 
         // Check if the name already exists (case-insensitive)
-        if (_context.Subjects.Any(s => s.Name.ToLower() == subject.Name.ToLower()))
+        if (string.IsNullOrWhiteSpace(subject.Name))
+        {
+            ModelState.AddModelError("Name", "Subject name cannot be empty.");
+        }
+        // Check if the name already exists (case-insensitive)
+        else if (_context.Subjects.Any(s => s.Name.ToLower() == subject.Name.ToLower()))
         {
             ModelState.AddModelError("Name", "Subject name must be unique.");
         }
@@ -73,7 +78,12 @@ public class SubjectsController : Controller
         subject.Name = subject.Name.Trim();
 
         // Ensure uniqueness while allowing the same name for the same ID
-        if (_context.Subjects.Any(s => s.Name.ToLower() == subject.Name.ToLower() && s.Id != id))
+        if (string.IsNullOrWhiteSpace(subject.Name))
+        {
+            ModelState.AddModelError("Name", "Subject name cannot be empty.");
+        }
+        // Check if the name already exists (case-insensitive)
+        else if (_context.Subjects.Any(s => s.Name.ToLower() == subject.Name.ToLower()))
         {
             ModelState.AddModelError("Name", "Subject name must be unique.");
         }
