@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Student_Section_ManagementSystemProject.Models
-{
     public class Schedule
     {
         public int Id { get; set; }
@@ -31,27 +28,9 @@ namespace Student_Section_ManagementSystemProject.Models
         public static ValidationResult ValidateTime(DateTime endTime, ValidationContext context)
         {
             var instance = (Schedule)context.ObjectInstance;
-
-            if (instance.StartTime == default || endTime == default)
-            {
-                return new ValidationResult("Invalid time values.");
-            }
-
-            // ✅ Fix: If endTime is earlier than startTime, assume it's the next day
-            if (instance.StartTime.TimeOfDay >= endTime.TimeOfDay)
-            {
-                if (endTime.Hour < instance.StartTime.Hour) // Next-day handling
-                {
-                    endTime = endTime.AddDays(1);
-                }
-                else
-                {
-                    return new ValidationResult("End time must be later than start time.");
-                }
-            }
-
-            return ValidationResult.Success;
+            return (instance.StartTime < endTime)
+                ? ValidationResult.Success
+                : new ValidationResult("End Time must be later than Start Time.");
         }
-
     }
 }

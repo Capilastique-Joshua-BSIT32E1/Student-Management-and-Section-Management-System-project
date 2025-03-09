@@ -1,85 +1,56 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Student_Section_ManagementSystemProject.Data;
-using Student_Section_ManagementSystemProject.Models;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
-public class SchedulesController : Controller
+public class ScheduleController : Controller
 {
     private readonly ApplicationDbContext _context;
 
-    public SchedulesController(ApplicationDbContext context)
+    public ScheduleController(ApplicationDbContext context)
     {
         _context = context;
     }
 
-    // 1️⃣ List All Schedules
-    public IActionResult Index()
+    // Display List of Schedules
+    public async Task<IActionResult> Index()
     {
-        TempData.Keep("ScheduleSuccessMessage");
-        var schedules = _context.Schedules.ToList();
+        var schedules = await _context.Schedules.Include(s => s.Subject).ToListAsync();
         return View(schedules);
     }
 
-    // 2️⃣ Show Create Schedule Form
+    // Show Form to Create Schedule
     public IActionResult Create()
     {
-        var subjects = _context.Subjects.ToList();
-        if (!subjects.Any())
-        {
-            TempData["ScheduleErrorMessage"] = "No subjects available. Please add subjects first.";
-            return RedirectToAction("Index");
-        }
-
-        ViewBag.Subjects = new SelectList(subjects, "Id", "Name");
+        ViewBag.Subjects = _context.Subjects.ToList();
         return View();
     }
 
-    // 3️⃣ Handle Schedule Creation (POST)
+    // Store Schedule
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Create(Schedule schedule)
+    public async Task<IActionResult> Create(Schedule schedule)
     {
-        // 🕒 Extract TimeSpan from DateTime
-        TimeSpan startTime = schedule.StartTime.TimeOfDay;
-        TimeSpan endTime = schedule.EndTime.TimeOfDay;
-
-        // 📌 Validate Subject Exists
-        var subjectExists = _context.Subjects.Any(s => s.Id == schedule.SubjectId);
-        if (!subjectExists)
+        if (ModelState.IsValid)
         {
-            ModelState.AddModelError("SubjectId", "Selected subject does not exist.");
+            _context.Schedules.Add(schedule);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
-
-        // 🔍 Validate Time Logic
-        if (startTime >= endTime)
-        {
-            if (schedule.EndTime.Hour < schedule.StartTime.Hour) // Handle cases where endTime is past midnight
-            {
-                schedule.EndTime = schedule.EndTime.AddDays(1);
-            }
-            else
-            {
-                ModelState.AddModelError("EndTime", "End time must be later than start time.");
-            }
-        }
-
-        // ❌ If errors exist, return to form
-        if (!ModelState.IsValid)
-        {
-            ViewBag.Subjects = new SelectList(_context.Subjects, "Id", "Name", schedule.SubjectId);
-            return View(schedule);
-        }
-
-        // ✅ Save Schedule with Correct Date
-        schedule.StartTime = DateTime.Today.Add(startTime);
-        schedule.EndTime = DateTime.Today.Add(endTime);
-        _context.Schedules.Add(schedule);
-        _context.SaveChanges();
-
-        TempData["ScheduleSuccessMessage"] = "Schedule added successfully!";
-        return RedirectToAction("Index");
+        ViewBag.Subjects = _context.Subjects.ToList();
+        return View(schedule);
     }
 
+    // Delete Schedule
+    public async Task<IActionResult> Delete(int id)
+        {
+        var schedule = await _context.Schedules.FindAsync(id);
+        if (schedule != null)
+            {
+            _context.Schedules.Remove(schedule);
+            await _context.SaveChangesAsync();
+        }
+        return RedirectToAction("Index");
+    }
 }
