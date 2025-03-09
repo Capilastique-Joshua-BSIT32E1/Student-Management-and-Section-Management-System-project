@@ -193,19 +193,20 @@
     <div class="alert alert-success">
         @TempData["SuccessMessage"]
     </div>
+}
 
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger">
-            @TempData["ErrorMessage"]
-        </div>
-    }
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
 
-    <script>
-        setTimeout(function () {
+<script>
+    setTimeout(function () {
         let alerts = document.querySelectorAll('.alert');
         alerts.forEach(alert => {
             alert.style.display = 'none';
         });
     }, 2000); // Increase to 5 seconds
-    </script>
+</script>
