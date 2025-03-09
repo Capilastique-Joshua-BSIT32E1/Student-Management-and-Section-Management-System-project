@@ -5,14 +5,14 @@ using Student_Section_ManagementSystemProject.Models;
 using System;
 using System.Linq;
 
-    public class SchedulesController : Controller
-    {
-        private readonly ApplicationDbContext _context;
+public class SchedulesController : Controller
+{
+    private readonly ApplicationDbContext _context;
 
-        public SchedulesController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+    public SchedulesController(ApplicationDbContext context)
+    {
+        _context = context;
+    }
 
     // 1️⃣ List All Schedules
     public IActionResult Index()
@@ -30,21 +30,33 @@ using System.Linq;
         return View(schedules);
     }
 
-        public IActionResult Create()
-        {
+    // 2️⃣ Show Create Schedule Form
+    public IActionResult Create()
+    {
         ViewBag.Subjects = new SelectList(_context.Subjects, "Id", "Name");
-            return View();
+        return View();
+    }
+
+    // 3️⃣ Handle Schedule Creation (POST)
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Create(Schedule schedule)
+    {
+        if (!_context.Subjects.Any(s => s.Id == schedule.SubjectId))
+        {
+            ModelState.AddModelError("SubjectId", "Selected subject does not exist.");
         }
 
-        [HttpPost]
-        public IActionResult Create(Schedule schedule)
+        if (ModelState.IsValid)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Schedules.Add(schedule);
-                _context.SaveChanges();
+            _context.Schedules.Add(schedule);
+            _context.SaveChanges();
             TempData["SuccessMessage"] = "Schedule created successfully!";
             return RedirectToAction("Index");
-            }
-            return View(schedule);
         }
+
+        ViewBag.Subjects = new SelectList(_context.Subjects, "Id", "Name", schedule.SubjectId);
+        TempData["ErrorMessage"] = "Failed to create schedule. Please check your inputs.";
+        return View(schedule);
+    }
+}
