@@ -206,23 +206,29 @@
 
 @if (TempData["SubjectSuccessMessage"] != null)
 {
-    <div class="alert alert-success">
+    <div class="alert alert-success" id="successMessage">
         @TempData["SubjectSuccessMessage"]
     </div>
 }
 
 @if (TempData["SubjectErrorMessage"] != null)
 {
-    <div class="alert alert-danger">
+    <div class="alert alert-danger" id="errorMessage">
         @TempData["SubjectErrorMessage"]
     </div>
 }
 
 <script>
     setTimeout(function () {
-        let alertBox = document.querySelector('.alert');
-        if (alertBox) {
-            alertBox.style.display = 'none';
+        let successBox = document.getElementById('successMessage');
+        let errorBox = document.getElementById('errorMessage');
+
+        if (successBox) {
+            successBox.style.display = 'none';
         }
-    }, 2000); // Extended to 2 seconds
+
+        if (errorBox) {
+            errorBox.style.display = 'none';
+        }
+    }, 2000); // Hides after 2 seconds
 </script>
