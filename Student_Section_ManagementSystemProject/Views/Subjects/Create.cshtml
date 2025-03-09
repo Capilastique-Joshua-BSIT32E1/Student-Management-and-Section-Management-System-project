@@ -22,11 +22,23 @@
     </form>
 </div>
 
-
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+@if (TempData["SubjectErrorMessage"] != null)
+{
+    <div class="alert alert-danger" id="errorMessage">
+        @TempData["SubjectErrorMessage"]
+    </div>
 }
+
+<script>
+    setTimeout(function () {
+        let errorBox = document.getElementById('errorMessage');
+
+        if (errorBox) {
+            errorBox.style.display = 'none';
+        }
+    }, 4000); // Hides after 2 seconds
+</script>
+
 
 <style>
     body {
@@ -89,4 +101,18 @@
             background-color: steelblue;
             color: white;
         }
+
+    .alert {
+        padding: 5px;
+        background-color: #4CAF50;
+        color: white;
+        text-align: center;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .alert-success {
+        background-color: #28a745;
+    }
 </style>
