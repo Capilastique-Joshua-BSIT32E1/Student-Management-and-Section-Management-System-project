@@ -124,10 +124,12 @@
 
     .confirm-button:hover {
         background-color: darkred;
+        color: white;
     }
 
     .cancel-button:hover {
         background-color: #666;
+        color: white;
     }
 </style>
 
@@ -194,18 +196,20 @@
         @TempData["SuccessMessage"]
     </div>
 
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["ErrorMessage"]
-    </div>
-}
 
-<script>
-    setTimeout(function () {
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <script>
+        setTimeout(function () {
             let alertBox = document.querySelector('.alert');
             if (alertBox) {
                 alertBox.style.display = 'none';
             }
         }, 2000);
-</script>
+    </script>
+}
