@@ -32,17 +32,18 @@ namespace Student_Section_ManagementSystemProject.Models
         {
             var instance = (Schedule)context.ObjectInstance;
 
-            // Convert to UTC to prevent timezone issues
-            DateTime startUtc = instance.StartTime.ToUniversalTime();
-            DateTime endUtc = endTime.ToUniversalTime();
+            if (instance.StartTime == default || endTime == default)
+            {
+                return new ValidationResult("Invalid time values.");
+            }
 
-            Console.WriteLine($"DEBUG: StartTime = {startUtc}, EndTime = {endUtc}");
-
-            if (startUtc >= endUtc)
+            if (instance.StartTime >= endTime)
             {
                 return new ValidationResult("End time must be later than start time.");
             }
+
             return ValidationResult.Success;
         }
+
     }
 }
