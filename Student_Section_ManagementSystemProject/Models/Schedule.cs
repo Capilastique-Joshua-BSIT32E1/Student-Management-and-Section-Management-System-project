@@ -37,9 +37,17 @@ namespace Student_Section_ManagementSystemProject.Models
                 return new ValidationResult("Invalid time values.");
             }
 
-            if (instance.StartTime >= endTime)
+            // ✅ Fix: If endTime is earlier than startTime, assume it's the next day
+            if (instance.StartTime.TimeOfDay >= endTime.TimeOfDay)
             {
-                return new ValidationResult("End time must be later than start time.");
+                if (endTime.Hour < instance.StartTime.Hour) // Next-day handling
+                {
+                    endTime = endTime.AddDays(1);
+                }
+                else
+                {
+                    return new ValidationResult("End time must be later than start time.");
+                }
             }
 
             return ValidationResult.Success;

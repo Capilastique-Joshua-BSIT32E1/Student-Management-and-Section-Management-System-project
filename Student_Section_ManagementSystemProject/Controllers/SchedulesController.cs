@@ -42,31 +42,33 @@ public class SchedulesController : Controller
     public IActionResult Create(Schedule schedule)
     {
         Console.WriteLine("DEBUG: Attempting to create a new schedule...");
-        Console.WriteLine($"DEBUG: New Schedule - SubjectId: {schedule.SubjectId}, StartTime: {schedule.StartTime.TimeOfDay}, EndTime: {schedule.EndTime.TimeOfDay}");
 
-        // Debugging: Print all available subjects
-        var subjectsInMemory = _context.Subjects.ToList();
-        Console.WriteLine("DEBUG: Available Subjects Count = " + subjectsInMemory.Count);
-        foreach (var subj in subjectsInMemory)
-        {
-            Console.WriteLine($"DEBUG: Subject - Id: {subj.Id}, Name: {subj.Name}");
-        }
+        // Extract only time (ignore date)
+        TimeSpan startTime = schedule.StartTime.TimeOfDay;
+        TimeSpan endTime = schedule.EndTime.TimeOfDay;
+
+        Console.WriteLine($"DEBUG: New Schedule - SubjectId: {schedule.SubjectId}, StartTime: {startTime}, EndTime: {endTime}");
 
         // Ensure SubjectId exists
+        var subjectsInMemory = _context.Subjects.ToList();
         if (!subjectsInMemory.Any(s => s.Id == schedule.SubjectId))
         {
             Console.WriteLine("DEBUG: Subject does not exist!");
             ModelState.AddModelError("SubjectId", "Selected subject does not exist.");
         }
 
-        // Extract only time (ignore date)
-        TimeSpan startTime = schedule.StartTime.TimeOfDay;
-        TimeSpan endTime = schedule.EndTime.TimeOfDay;
-
+        // ✅ Time validation: Handle cases where end time is on the next day
         if (startTime >= endTime)
         {
-            Console.WriteLine("DEBUG: StartTime is greater than or equal to EndTime!");
-            ModelState.AddModelError("EndTime", "End time must be later than start time.");
+            // If EndTime is smaller, assume it's for the next day
+            if (schedule.EndTime.Hour < schedule.StartTime.Hour)
+            {
+                schedule.EndTime = schedule.EndTime.AddDays(1);
+            }
+            else
+            {
+                ModelState.AddModelError("EndTime", "End time must be later than start time.");
+            }
         }
 
         // Check for duplicate schedules in memory (based on time, not date)
@@ -78,9 +80,20 @@ public class SchedulesController : Controller
             ModelState.AddModelError("", "A schedule with the same subject and time already exists.");
         }
 
+        // Log ModelState errors for debugging
+        foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+        {
+            Console.WriteLine("DEBUG: ModelState Error - " + error.ErrorMessage);
+        }
+
         if (ModelState.IsValid)
         {
             Console.WriteLine("DEBUG: Schedule is valid, adding to database...");
+
+            // Store only the time (set date to today's date)
+            schedule.StartTime = DateTime.Today.Add(startTime);
+            schedule.EndTime = DateTime.Today.Add(endTime);
+
             _context.Schedules.Add(schedule);
             _context.SaveChanges();
             Console.WriteLine("DEBUG: Schedule saved successfully!");
@@ -96,4 +109,5 @@ public class SchedulesController : Controller
         ViewBag.Subjects = new SelectList(subjectsInMemory, "Id", "Name", schedule.SubjectId);
         return View(schedule);
     }
+
 }

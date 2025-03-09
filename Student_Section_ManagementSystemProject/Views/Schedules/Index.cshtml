@@ -36,6 +36,13 @@
     </div>
 }
 
+@if (TempData["ScheduleErrorMessage"] != null)
+{
+    <div class="alert alert-success" id="successMessage">
+        @TempData["ScheduleErrorMessage"]
+    </div>
+}
+
 <script>
     // Hide alerts automatically after 2 seconds
     setTimeout(function () {
