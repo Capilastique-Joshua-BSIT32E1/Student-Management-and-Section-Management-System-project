@@ -76,11 +76,12 @@
     }
 
     .alert {
-        padding: 10px;
+        padding: 5px;
         background-color: #4CAF50;
         color: white;
         text-align: center;
         border-radius: 5px;
+        margin-top: 10px;
         margin-bottom: 10px;
     }
 
@@ -117,4 +118,13 @@
     <div class="alert alert-success">
         @TempData["SuccessMessage"]
     </div>
+
+    <script>
+        setTimeout(function () {
+            let alertBox = document.querySelector('.alert');
+            if (alertBox) {
+                alertBox.style.display = 'none';
+            }
+        }, 2000);
+    </script>
 }
