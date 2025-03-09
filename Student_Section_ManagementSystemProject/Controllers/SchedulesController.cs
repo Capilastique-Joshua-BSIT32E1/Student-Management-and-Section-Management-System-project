@@ -17,7 +17,7 @@ public class SchedulesController : Controller
     // 1️⃣ List All Schedules
     public IActionResult Index()
     {
-        TempData.Keep("ScheduleSuccessMessage"); // Persist TempData
+        TempData.Keep("ScheduleSuccessMessage");
         var schedules = _context.Schedules.ToList();
         return View(schedules);
     }
@@ -42,10 +42,9 @@ public class SchedulesController : Controller
     public IActionResult Create(Schedule schedule)
     {
         Console.WriteLine("DEBUG: Attempting to create a new schedule...");
-        Console.WriteLine("DEBUG: Existing Schedules Count = " + _context.Schedules.Count());
-        Console.WriteLine($"DEBUG: New Schedule - SubjectId: {schedule.SubjectId}, StartTime: {schedule.StartTime}, EndTime: {schedule.EndTime}");
+        Console.WriteLine($"DEBUG: New Schedule - SubjectId: {schedule.SubjectId}, StartTime: {schedule.StartTime.TimeOfDay}, EndTime: {schedule.EndTime.TimeOfDay}");
 
-        // Debugging: Print all available subjects in memory
+        // Debugging: Print all available subjects
         var subjectsInMemory = _context.Subjects.ToList();
         Console.WriteLine("DEBUG: Available Subjects Count = " + subjectsInMemory.Count);
         foreach (var subj in subjectsInMemory)
@@ -53,26 +52,27 @@ public class SchedulesController : Controller
             Console.WriteLine($"DEBUG: Subject - Id: {subj.Id}, Name: {subj.Name}");
         }
 
-        // Ensure SubjectId exists in memory (since it's not persisted in the database)
+        // Ensure SubjectId exists
         if (!subjectsInMemory.Any(s => s.Id == schedule.SubjectId))
         {
             Console.WriteLine("DEBUG: Subject does not exist!");
             ModelState.AddModelError("SubjectId", "Selected subject does not exist.");
         }
 
-        if (schedule.StartTime >= schedule.EndTime)
+        // Extract only time (ignore date)
+        TimeSpan startTime = schedule.StartTime.TimeOfDay;
+        TimeSpan endTime = schedule.EndTime.TimeOfDay;
+
+        if (startTime >= endTime)
         {
             Console.WriteLine("DEBUG: StartTime is greater than or equal to EndTime!");
             ModelState.AddModelError("EndTime", "End time must be later than start time.");
         }
 
-        DateTime startUtc = schedule.StartTime.ToUniversalTime();
-        DateTime endUtc = schedule.EndTime.ToUniversalTime();
-
-        // Check for duplicate schedules in memory
+        // Check for duplicate schedules in memory (based on time, not date)
         if (_context.Schedules.Any(s => s.SubjectId == schedule.SubjectId &&
-                                        s.StartTime.ToUniversalTime() == startUtc &&
-                                        s.EndTime.ToUniversalTime() == endUtc))
+                                        s.StartTime.TimeOfDay == startTime &&
+                                        s.EndTime.TimeOfDay == endTime))
         {
             Console.WriteLine("DEBUG: Duplicate schedule detected!");
             ModelState.AddModelError("", "A schedule with the same subject and time already exists.");
@@ -96,5 +96,4 @@ public class SchedulesController : Controller
         ViewBag.Subjects = new SelectList(subjectsInMemory, "Id", "Name", schedule.SubjectId);
         return View(schedule);
     }
-
 }
