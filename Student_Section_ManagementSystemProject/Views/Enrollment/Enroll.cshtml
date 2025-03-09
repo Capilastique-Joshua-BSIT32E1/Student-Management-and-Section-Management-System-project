@@ -1,25 +1,53 @@
 ﻿@model Student_Section_ManagementSystemProject.Models.Schedule
-<h2>Enroll Students to @ViewBag.Schedule.Subject.Name</h2>
 
-<form method="post">
-    <input type="hidden" name="scheduleId" value="@ViewBag.Schedule.Id" />
-    <label>Select Student:</label>
-    <select name="studentId">
-        @foreach (var student in ViewBag.Students)
-        {
-            <option value="@student.Id">@student.Name</option>
-        }
-    </select>
-    <button type="submit">Enroll</button>
+@{
+    ViewData["Title"] = "Enroll Students";
+}
+
+<h2>Enroll Students in @Model.Subject.Name</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<form method="post" asp-action="Enroll">
+    <input type="hidden" name="scheduleId" value="@Model.Id" />
+
+    <div class="form-group">
+        <label>Select Student</label>
+        <select name="studentId" asp-items="ViewBag.Students" class="form-control"></select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enroll</button>
 </form>
 
 <h3>Enrolled Students</h3>
-<ul>
-    @foreach (var student in ViewBag.Schedule.EnrolledStudents)
-    {
-        <li>
-            @student.Name
-            <a href="/Enrollment/RemoveEnrollment?scheduleId=@ViewBag.Schedule.Id&studentId=@student.Id">Remove</a>
-        </li>
-    }
-</ul>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Student Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var enrollment in Model.Enrollments)
+        {
+            <tr>
+                <td>@enrollment.Student.Name</td>
+                <td>
+                    <form method="post" asp-action="Unenroll">
+                        <input type="hidden" name="scheduleId" value="@Model.Id" />
+                        <input type="hidden" name="studentId" value="@enrollment.Student.Id" />
+                        <button type="submit" class="btn btn-danger">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
