@@ -8,12 +8,6 @@
 
 <a href="/Schedules/Create" class="add-button">Add New Schedule</a>
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success" id="successMessage">
-        @TempData["SuccessMessage"]
-    </div>
-}
 
 <table class="student-table">
     <thead>
@@ -34,6 +28,13 @@
         }
     </tbody>
 </table>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" id="successMessage">
+        @TempData["SuccessMessage"]
+    </div>
+}
 
 <script>
     // Hide alerts automatically after 2 seconds
