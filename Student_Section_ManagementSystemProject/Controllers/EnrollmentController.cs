@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Student_Section_ManagementSystemProject.Data;
 using Student_Section_ManagementSystemProject.Models;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ public class EnrollmentController : Controller
         _context = context;
     }
 
-    // ✅ Route to Enroll a Student in a Specific Schedule (Single Enrollment)
+    // ✅ Enroll a Student in a Specific Schedule (Single Enrollment)
     [HttpGet("Enroll")]
     public async Task<IActionResult> Enroll(int scheduleId)
     {
@@ -36,17 +37,18 @@ public class EnrollmentController : Controller
         return View(schedule);
     }
 
-    // ✅ New Route to Enroll in Multiple Schedules (Multiple Enrollment)
+    // ✅ Multiple Enrollment View
     [HttpGet("Enroll-All")]
     public async Task<IActionResult> Enroll()
     {
-        ViewBag.Students = new SelectList(await _context.Students.ToListAsync(), "Id", "Name");
-
-        // ✅ Ensure ViewBag.Schedules is properly assigned
-        ViewBag.Schedules = await _context.Schedules
+        var students = await _context.Students.ToListAsync();
+        var schedules = await _context.Schedules
             .Include(s => s.Subject)
             .Include(s => s.Enrollments)
             .ToListAsync();
+
+        ViewBag.Students = new SelectList(students, "Id", "Name");
+        ViewBag.Schedules = schedules;
 
         return View();
     }
@@ -70,40 +72,38 @@ public class EnrollmentController : Controller
         {
             var schedule = await _context.Schedules
                 .Include(s => s.Enrollments)
+                .ThenInclude(e => e.Student)
                 .FirstOrDefaultAsync(s => s.Id == scheduleId);
 
             if (schedule == null)
             {
-                messages.Add($"Schedule ID {scheduleId} not found.");
+                messages.Add($"⚠ Schedule ID {scheduleId} not found.");
                 continue;
             }
 
             // Check if student is already enrolled
-            bool isAlreadyEnrolled = await _context.Enrollments
-                .AnyAsync(e => e.ScheduleId == scheduleId && e.StudentId == studentId);
-
+            bool isAlreadyEnrolled = schedule.Enrollments.Any(e => e.StudentId == studentId);
             if (isAlreadyEnrolled)
             {
-                messages.Add($"Student is already enrolled in {schedule.Subject.Name}.");
+                messages.Add($"⚠ Student is already enrolled in {schedule.Subject.Name}.");
                 continue;
             }
 
             // Check if schedule has open slots
             if (schedule.Enrollments.Count >= schedule.Capacity)
             {
-                messages.Add($"{schedule.Subject.Name} is full.");
+                messages.Add($"❌ {schedule.Subject.Name} is full.");
                 continue;
             }
 
             // Enroll the student
             _context.Enrollments.Add(new Enrollment { ScheduleId = scheduleId, StudentId = studentId });
-            messages.Add($"Student enrolled in {schedule.Subject.Name}.");
+            messages.Add($"✅ Student successfully enrolled in {schedule.Subject.Name}.");
         }
 
         await _context.SaveChangesAsync();
 
-        TempData["SuccessMessage"] = string.Join("<br>", messages);
+        TempData["SuccessMessage"] = "<ul><li>" + string.Join("</li><li>", messages) + "</li></ul>";
         return RedirectToAction("Enroll-All");
     }
-
 }

@@ -39,7 +39,15 @@ public class SchedulesController : Controller
             return View(schedule);
         }
 
-        // Check for overlapping schedules
+        // ✅ Ensure EndTime is later than StartTime
+        if (schedule.EndTime <= schedule.StartTime)
+        {
+            ModelState.AddModelError("EndTime", "End time must be later than start time.");
+            ViewBag.Subjects = _context.Subjects.ToList();
+            return View(schedule);
+        }
+
+        // ✅ Check for overlapping schedules
         bool isOverlapping = await _context.Schedules.AnyAsync(s =>
             s.SubjectId == schedule.SubjectId &&
             ((schedule.StartTime >= s.StartTime && schedule.StartTime < s.EndTime) ||

@@ -1,23 +1,22 @@
-﻿@model Student_Section_ManagementSystemProject.Models.Schedule
-@{
-    ViewData["Title"] = "Enroll Students";
+﻿@{
+    ViewData["Title"] = "Enroll Students in Multiple Schedules";
 }
 
 <h2>Enroll Student in Available Schedules</h2>
 
 @if (TempData["SuccessMessage"] != null)
 {
-    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    <div class="alert alert-success">@Html.Raw(TempData["SuccessMessage"])</div>
 }
 @if (TempData["ErrorMessage"] != null)
 {
-    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    <div class="alert alert-danger">@Html.Raw(TempData["ErrorMessage"])</div>
 }
 
-<form asp-controller="Enrollment" asp-action="EnrollMultiple" method="post">
+<form asp-controller="Enrollment" asp-action="EnrollMultiple" method="post" id="enrollmentForm">
     <div class="form-group">
         <label for="studentId">Select Student</label>
-        <select name="studentId" class="form-control" asp-items="ViewBag.Students">
+        <select name="studentId" class="form-control" asp-items="ViewBag.Students" required>
             <option value="">-- Select a Student --</option>
         </select>
     </div>
@@ -28,9 +27,12 @@
     {
         @foreach (var schedule in ViewBag.Schedules)
         {
+            bool isFull = schedule.Enrollments.Count >= schedule.Capacity;
+
             <div class="form-check">
-                <input type="checkbox" name="scheduleIds" value="@schedule.Id" class="form-check-input" id="schedule_@schedule.Id" />
-                <label class="form-check-label" for="schedule_@schedule.Id">
+                <input type="checkbox" name="scheduleIds" value="@schedule.Id"
+                       class="form-check-input" id="schedule_@schedule.Id" @(isFull ? "disabled" : "") />
+                <label class="form-check-label @(isFull ? "text-danger" : "")" for="schedule_@schedule.Id">
                     @schedule.Subject.Name (@schedule.Capacity - @schedule.Enrollments.Count slots left)
                 </label>
             </div>
@@ -43,3 +45,13 @@
 
     <button type="submit" class="btn btn-primary mt-2">Enroll</button>
 </form>
+
+<script>
+    document.getElementById("enrollmentForm").addEventListener("submit", function (e) {
+        let checkboxes = document.querySelectorAll("input[name='scheduleIds']:checked");
+        if (checkboxes.length === 0) {
+            alert("Please select at least one schedule.");
+            e.preventDefault();
+        }
+    });
+</script>
