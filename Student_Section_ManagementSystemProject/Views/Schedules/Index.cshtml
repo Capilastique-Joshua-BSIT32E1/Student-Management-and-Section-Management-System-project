@@ -1,5 +1,23 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model IEnumerable<StudentManagementSystem.Models.Schedule>
+<h2>Class Schedules</h2>
+<a href="/Schedules/Create">Create New Schedule</a>
+<table border="1">
+    <tr>
+        <th>Subject</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var schedule in Model)
+    {
+        <tr>
+            <td>@schedule.Subject.Name</td>
+            <td>@schedule.StartTime</td>
+            <td>@schedule.EndTime</td>
+            <td>
+                <a href="/Enrollment/Enroll?scheduleId=@schedule.Id">Enroll Students</a> |
+                <a href="/Schedules/Delete/@schedule.Id">Delete</a>
+            </td>
+        </tr>
+    }
+</table>
