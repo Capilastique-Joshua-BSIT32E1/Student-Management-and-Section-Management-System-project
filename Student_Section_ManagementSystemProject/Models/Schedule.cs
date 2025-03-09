@@ -24,6 +24,8 @@ namespace Student_Section_ManagementSystemProject.Models
         [ForeignKey("SubjectId")]
         public Subject Subject { get; set; }
 
+        public List<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
+
         // Custom validation for EndTime
         public static ValidationResult ValidateTime(DateTime endTime, ValidationContext context)
         {
