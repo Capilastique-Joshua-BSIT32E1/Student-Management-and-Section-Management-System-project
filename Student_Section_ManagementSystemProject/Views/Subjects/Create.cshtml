@@ -6,22 +6,6 @@
 
 <h2>Add New Subject</h2>
 
-<div class="form-container">
-    <form asp-action="Create">
-        <div class="form-group">
-            <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control" required />
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="Description"></label>
-            <textarea asp-for="Description" class="form-control" required></textarea>
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
-        <button type="submit" class="save-button">Save</button>
-    </form>
-</div>
-
 @if (TempData["SubjectErrorMessage"] != null)
 {
     <div class="alert alert-danger" id="errorMessage">
@@ -38,6 +22,22 @@
         }
     }, 4000); // Hides after 2 seconds
 </script>
+
+<div class="form-container">
+    <form asp-action="Create">
+        <div class="form-group">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" required />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description" class="form-control" required></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <button type="submit" class="save-button">Save</button>
+    </form>
+</div>
 
 
 <style>

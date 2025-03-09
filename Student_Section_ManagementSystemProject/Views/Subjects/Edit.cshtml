@@ -81,6 +81,25 @@
 
 <h2>Edit Subject</h2>
 
+
+@if (TempData["StudentErrorMessage"] != null)
+{
+    <div class="alert alert-danger" id="errorMessage">
+        @TempData["StudentErrorMessage"]
+    </div>
+}
+
+<script>
+    setTimeout(function () {
+        let errorBox = document.getElementById('errorMessage');
+
+        if (errorBox) {
+            errorBox.style.display = 'none';
+        }
+    }, 4000); // Hides after 2 seconds
+</script>
+
+
 <div class="edit-container">
     <div class="edit-card">
         <form asp-action="Edit">
@@ -104,9 +123,3 @@
         </form>
     </div>
 </div>
-
-
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}

@@ -76,6 +76,24 @@
 
 <h2>Edit Student</h2>
 
+@if (TempData["StudentErrorMessage"] != null)
+{
+    <div class="alert alert-danger" id="errorMessage">
+        @TempData["StudentErrorMessage"]
+    </div>
+}
+
+<script>
+    setTimeout(function () {
+        let errorBox = document.getElementById('errorMessage');
+
+        if (errorBox) {
+            errorBox.style.display = 'none';
+        }
+    }, 4000); // Hides after 2 seconds
+</script>
+
+
 <div class="edit-container">
     <div class="edit-card">
         <form method="post">
@@ -97,21 +115,3 @@
         </form>
     </div>
 </div>
-
-@if (TempData["StudentErrorMessage"] != null)
-{
-    <div class="alert alert-danger" id="errorMessage">
-        @TempData["StudentErrorMessage"]
-    </div>
-}
-
-<script>
-    setTimeout(function () {
-        let errorBox = document.getElementById('errorMessage');
-
-        if (errorBox) {
-            errorBox.style.display = 'none';
-        }
-    }, 4000); // Hides after 2 seconds
-</script>
-
