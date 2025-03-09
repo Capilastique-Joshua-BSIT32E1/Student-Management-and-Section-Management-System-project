@@ -196,7 +196,6 @@
         @TempData["SuccessMessage"]
     </div>
 
-
     @if (TempData["ErrorMessage"] != null)
     {
         <div class="alert alert-danger">
@@ -210,6 +209,6 @@
             if (alertBox) {
                 alertBox.style.display = 'none';
             }
-        }, 2000);
+    }, 2000); // Extended to 5 seconds
     </script>
 }
