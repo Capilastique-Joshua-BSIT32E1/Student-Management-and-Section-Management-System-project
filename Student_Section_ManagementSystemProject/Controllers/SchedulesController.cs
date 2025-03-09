@@ -25,7 +25,14 @@ public class SchedulesController : Controller
     // 2️⃣ Show Create Schedule Form
     public IActionResult Create()
     {
-        ViewBag.Subjects = new SelectList(_context.Subjects, "Id", "Name");
+        var subjects = _context.Subjects.ToList();
+        if (!subjects.Any())
+        {
+            TempData["ScheduleErrorMessage"] = "No subjects available. Please add subjects first.";
+            return RedirectToAction("Index");
+        }
+
+        ViewBag.Subjects = new SelectList(subjects, "Id", "Name");
         return View();
     }
 
@@ -47,15 +54,17 @@ public class SchedulesController : Controller
         }
 
         // Check for Duplicate Schedule (Same subject, same time)
-        if (_context.Schedules.Any(s => s.SubjectId == schedule.SubjectId && s.StartTime == schedule.StartTime && s.EndTime == schedule.EndTime))
+        if (_context.Schedules.Any(s => s.SubjectId == schedule.SubjectId &&
+                                        s.StartTime == schedule.StartTime &&
+                                        s.EndTime == schedule.EndTime))
         {
             ModelState.AddModelError("", "A schedule with the same subject and time already exists.");
         }
 
         if (ModelState.IsValid)
         {
-            _context.Schedules.Add(schedule);
-            _context.SaveChanges();
+            _context.Schedules.Add(schedule); // ✅ Fix: Corrected entity reference
+            _context.SaveChanges(); // ✅ Fix: Removed incorrect '.'
             TempData["ScheduleSuccessMessage"] = "Schedule added successfully!";
             return RedirectToAction("Index");
         }

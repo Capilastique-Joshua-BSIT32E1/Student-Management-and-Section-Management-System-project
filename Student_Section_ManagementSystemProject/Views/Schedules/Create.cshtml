@@ -16,40 +16,39 @@
 <script>
     setTimeout(function () {
         let errorBox = document.getElementById('errorMessage');
-
         if (errorBox) {
             errorBox.style.display = 'none';
         }
-    }, 4000); // Hides after 2 seconds
+    }, 4000);
 </script>
 
+<div class="form-container">
+    <form method="post">
+        <div class="form-group">
+            <label for="SubjectId">Subject</label>
+            <select asp-for="SubjectId" asp-items="ViewBag.Subjects" class="form-control">
+                <option value="">-- Select Subject --</option>
+            </select>
+            <span asp-validation-for="SubjectId" class="text-danger"></span>
+        </div>
 
-<form method="post">
-    <div class="form-group">
-        <label for="SubjectId">Subject</label>
-        <select asp-for="SubjectId" asp-items="ViewBag.Subjects" class="form-control">
-            <option value="">-- Select Subject --</option>
-        </select>
-        <span asp-validation-for="SubjectId" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="StartTime"></label>
+            <input asp-for="StartTime" type="datetime-local" class="form-control"
+                   value="@Model?.StartTime.ToString("yyyy-MM-ddTHH:mm")" />
+            <span asp-validation-for="StartTime" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="StartTime"></label>
-        <input asp-for="StartTime" type="datetime-local" class="form-control"
-               value="@Model?.StartTime.ToString("yyyy-MM-ddTHH:mm")" />
-        <span asp-validation-for="StartTime" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="EndTime"></label>
+            <input asp-for="EndTime" type="datetime-local" class="form-control"
+                   value="@Model?.EndTime.ToString("yyyy-MM-ddTHH:mm")" />
+            <span asp-validation-for="EndTime" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="EndTime"></label>
-        <input asp-for="EndTime" type="datetime-local" class="form-control"
-               value="@Model?.EndTime.ToString("yyyy-MM-ddTHH:mm")" />
-        <span asp-validation-for="EndTime" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>
-
+        <button type="submit" class="save-button">Save</button>
+    </form>
+</div>
 
 <style>
     body {
@@ -85,7 +84,7 @@
             margin-bottom: 5px;
         }
 
-        .form-group input {
+        .form-group input, .form-group select {
             width: 100%;
             padding: 8px;
             border: 1px solid #ccc;
@@ -121,6 +120,10 @@
         border-radius: 5px;
         margin-top: 10px;
         margin-bottom: 10px;
+    }
+
+    .alert-danger {
+        background-color: #dc3545;
     }
 
     .alert-success {
