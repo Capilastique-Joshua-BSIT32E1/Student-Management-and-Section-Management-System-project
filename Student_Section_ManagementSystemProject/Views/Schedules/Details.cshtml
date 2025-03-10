@@ -15,8 +15,24 @@
     </div>
 }
 
-<!-- ✅ Add New Student Section -->
-<a class="add-button" href="#enroll-form">+ Enroll Student</a>
+<script>
+    // Hide alerts automatically after 2 seconds
+    setTimeout(function () {
+        let successBox = document.getElementById('EnrollmentSuccessMessage');
+        let errorBox = document.getElementById('EnrollmentErrorMessage');
+
+        if (successBox) {
+            successBox.style.display = 'none';
+        }
+
+        if (errorBox) {
+            errorBox.style.display = 'none';
+        }
+    }, 2000);
+</script>
+
+
+<a class="add-button" href="@Url.Action("Create", "Students")">+ Student</a>
 
 <h4>Enroll New Student</h4>
 <form method="post" action="/Enrollments/Enroll" id="enroll-form">
