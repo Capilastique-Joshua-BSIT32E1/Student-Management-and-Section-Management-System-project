@@ -19,8 +19,5 @@ namespace Student_Section_ManagementSystemProject.Models
         public DateTime EndTime { get; set; }
 
           public int Capacity { get; set; } 
-
-        // 🛠 FIX: Add navigation property for Enrollments
-        public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
     }
 }

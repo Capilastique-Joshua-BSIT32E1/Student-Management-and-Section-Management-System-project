@@ -9,7 +9,9 @@ namespace Student_Section_ManagementSystemProject.Data
 
         public DbSet<Student> Students { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
-        public DbSet<Enrollment> Enrollments { get; set; }
+
+        //public DbSet<Enrollment> Enrollments { get; set; }
+
         public DbSet<Subject> Subjects { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
