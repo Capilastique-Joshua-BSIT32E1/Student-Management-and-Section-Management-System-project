@@ -54,7 +54,8 @@ public class EnrollmentController : Controller
             TempData["ErrorMessage"] = "No available schedules for enrollment. Please add a schedule.";
         }
 
-        var model = new Enrollment
+        // ✅ Ensure the model is of type Enrollment
+        var model = new EnrollmentViewModel
         {
             StudentsList = students,
             SchedulesList = schedules
@@ -62,7 +63,8 @@ public class EnrollmentController : Controller
 
         return View(model);
     }
-    
+
+
 
     [HttpPost("EnrollMultiple")]
     [ValidateAntiForgeryToken]

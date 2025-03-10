@@ -3,12 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\Admin\\Desktop\\Student-Management-and-Section-Management-System-project\\Student_Section_ManagementSystemProject\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CA9A5C31-E563-40ED-89F2-8E56631E72D4}|Student_Section_ManagementSystemProject.csproj|c:\\users\\admin\\desktop\\student-management-and-section-management-system-project\\student_section_managementsystemproject\\controllers\\schedulescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CA9A5C31-E563-40ED-89F2-8E56631E72D4}|Student_Section_ManagementSystemProject.csproj|solutionrelative:controllers\\schedulescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CA9A5C31-E563-40ED-89F2-8E56631E72D4}|Student_Section_ManagementSystemProject.csproj|c:\\users\\admin\\desktop\\student-management-and-section-management-system-project\\student_section_managementsystemproject\\controllers\\enrollmentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CA9A5C31-E563-40ED-89F2-8E56631E72D4}|Student_Section_ManagementSystemProject.csproj|solutionrelative:controllers\\enrollmentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CA9A5C31-E563-40ED-89F2-8E56631E72D4}|Student_Section_ManagementSystemProject.csproj|c:\\users\\admin\\desktop\\student-management-and-section-management-system-project\\student_section_managementsystemproject\\views\\enrollment\\enroll.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CA9A5C31-E563-40ED-89F2-8E56631E72D4}|Student_Section_ManagementSystemProject.csproj|solutionrelative:views\\enrollment\\enroll.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CA9A5C31-E563-40ED-89F2-8E56631E72D4}|Student_Section_ManagementSystemProject.csproj|c:\\users\\admin\\desktop\\student-management-and-section-management-system-project\\student_section_managementsystemproject\\models\\enrollment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CA9A5C31-E563-40ED-89F2-8E56631E72D4}|Student_Section_ManagementSystemProject.csproj|solutionrelative:models\\enrollment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,32 +22,46 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "SchedulesController.cs",
-              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Student-Management-and-Section-Management-System-project\\Student_Section_ManagementSystemProject\\Controllers\\SchedulesController.cs",
-              "RelativeDocumentMoniker": "Controllers\\SchedulesController.cs",
-              "ToolTip": "C:\\Users\\Admin\\Desktop\\Student-Management-and-Section-Management-System-project\\Student_Section_ManagementSystemProject\\Controllers\\SchedulesController.cs",
-              "RelativeToolTip": "Controllers\\SchedulesController.cs",
-              "ViewState": "AgIAAB0AAAAAAAAAAAAwwCgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-10T02:26:55.237Z",
+              "DocumentIndex": 1,
+              "Title": "Enroll.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Student-Management-and-Section-Management-System-project\\Student_Section_ManagementSystemProject\\Views\\Enrollment\\Enroll.cshtml",
+              "RelativeDocumentMoniker": "Views\\Enrollment\\Enroll.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Student-Management-and-Section-Management-System-project\\Student_Section_ManagementSystemProject\\Views\\Enrollment\\Enroll.cshtml",
+              "RelativeToolTip": "Views\\Enrollment\\Enroll.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-03-10T02:59:24.537Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
+              "Title": "Enrollment.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Student-Management-and-Section-Management-System-project\\Student_Section_ManagementSystemProject\\Models\\Enrollment.cs",
+              "RelativeDocumentMoniker": "Models\\Enrollment.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Student-Management-and-Section-Management-System-project\\Student_Section_ManagementSystemProject\\Models\\Enrollment.cs",
+              "RelativeToolTip": "Models\\Enrollment.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-10T02:42:44.792Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
               "Title": "EnrollmentController.cs",
               "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Student-Management-and-Section-Management-System-project\\Student_Section_ManagementSystemProject\\Controllers\\EnrollmentController.cs",
               "RelativeDocumentMoniker": "Controllers\\EnrollmentController.cs",
               "ToolTip": "C:\\Users\\Admin\\Desktop\\Student-Management-and-Section-Management-System-project\\Student_Section_ManagementSystemProject\\Controllers\\EnrollmentController.cs",
               "RelativeToolTip": "Controllers\\EnrollmentController.cs",
-              "ViewState": "AQIAAFAAAAAAAAAAAAAkwHQAAAAAAAAA",
+              "ViewState": "AgIAADQAAAAAAAAAAAAswEAAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-10T02:26:55.578Z"
+              "WhenOpened": "2025-03-10T02:42:05.249Z",
+              "EditorCaption": ""
             }
           ]
         }
