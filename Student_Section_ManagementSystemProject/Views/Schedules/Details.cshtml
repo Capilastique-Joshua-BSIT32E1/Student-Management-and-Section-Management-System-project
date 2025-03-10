@@ -1,0 +1,41 @@
+﻿@model Student_Section_ManagementSystemProject.Models.Schedule
+
+<h2>@Model.Subject.Name - Schedule Details</h2>
+
+@if (TempData["EnrollmentSuccessMessage"] != null)
+{
+    <p style="color:green">@TempData["EnrollmentSuccessMessage"]</p>
+}
+@if (TempData["EnrollmentErrorMessage"] != null)
+{
+    <p style="color:red">@TempData["EnrollmentErrorMessage"]</p>
+}
+
+<h4>Enroll New Student</h4>
+<form method="post" action="/Enrollments/Enroll">
+    <input type="hidden" name="scheduleId" value="@Model.Id" />
+    <select name="studentId">
+        @foreach (var student in ViewBag.Students)
+        {
+            <option value="@student.Id">@student.Name - @student.Email</option>
+        }
+    </select>
+    <button type="submit">Enroll Student</button>
+</form>
+
+<h4>Enrolled Students</h4>
+<ul>
+    @foreach (var student in Model.EnrolledStudents)
+    {
+        <li>
+            @student.Name - @student.Email
+            <form method="post" action="/Enrollments/Remove" style="display:inline;">
+                <input type="hidden" name="scheduleId" value="@Model.Id" />
+                <input type="hidden" name="studentId" value="@student.Id" />
+                <button type="submit" style="color:red;">Remove</button>
+            </form>
+        </li>
+    }
+</ul>
+
+<a href="/Schedules/Index">Back to Schedules</a>

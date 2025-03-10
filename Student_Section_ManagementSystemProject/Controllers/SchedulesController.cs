@@ -71,5 +71,23 @@ public class SchedulesController : Controller
         return RedirectToAction("Index");
     }
 
+    public IActionResult Details(int id)
+    {
+        var schedule = _context.Schedules
+            .Include(s => s.EnrolledStudents)
+            .Include(s => s.Subject)
+            .FirstOrDefault(s => s.Id == id);
+
+        if (schedule == null)
+            return NotFound();
+
+        ViewBag.Students = _context.Students
+            .Where(s => s.ScheduleId == null) // Only students without a schedule
+            .ToList();
+
+        return View(schedule);
+    }
+
+
 
 }

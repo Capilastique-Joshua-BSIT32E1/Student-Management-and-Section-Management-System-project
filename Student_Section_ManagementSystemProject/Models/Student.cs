@@ -12,5 +12,9 @@ namespace Student_Section_ManagementSystemProject.Models
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "Invalid email format.")]
         public string Email { get; set; }
+
+        // ✅ Foreign Key for Enrollment
+        public int? ScheduleId { get; set; }
+        public virtual Schedule? Schedule { get; set; }
     }
 }
