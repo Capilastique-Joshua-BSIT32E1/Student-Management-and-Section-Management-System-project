@@ -37,17 +37,16 @@ public class EnrollmentController : Controller
         return View(schedule);
     }
 
+
     [HttpGet("Enroll-All")]
     public async Task<IActionResult> Enroll()
     {
-        ViewBag.Students = new SelectList(await _context.Students.ToListAsync(), "Id", "Name");
-
+        var students = await _context.Students.ToListAsync();
         var schedules = await _context.Schedules
-            .Include(s => s.Subject)   // Include Subject for better display
-            .Include(s => s.Enrollments) // Include Enrollments
+            .Include(s => s.Subject)
+            .Include(s => s.Enrollments)
             .ToListAsync();
 
-        // ✅ Debugging: Check if schedules exist
         Console.WriteLine($"Schedules Count: {schedules.Count}");
 
         if (!schedules.Any())
@@ -55,20 +54,23 @@ public class EnrollmentController : Controller
             TempData["ErrorMessage"] = "No available schedules for enrollment. Please add a schedule.";
         }
 
-        ViewBag.Schedules = schedules;
-        return View();
+        var model = new Enrollment
+        {
+            StudentsList = students,
+            SchedulesList = schedules
+        };
+
+        return View(model);
     }
+    
 
-
-
-    // ✅ Post method for multiple enrollments
     [HttpPost("EnrollMultiple")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> EnrollMultiple(int studentId, List<int> scheduleIds)
+    public async Task<IActionResult> EnrollMultiple(int StudentId, List<int> SelectedScheduleIds)
     {
-        var student = await _context.Students.FindAsync(studentId);
+        var student = await _context.Students.FindAsync(StudentId);
 
-        if (student == null || scheduleIds == null || !scheduleIds.Any())
+        if (student == null || SelectedScheduleIds == null || !SelectedScheduleIds.Any())
         {
             TempData["ErrorMessage"] = "Invalid student or no schedules selected.";
             return RedirectToAction("Enroll-All");
@@ -76,7 +78,7 @@ public class EnrollmentController : Controller
 
         List<string> messages = new List<string>();
 
-        foreach (var scheduleId in scheduleIds)
+        foreach (var scheduleId in SelectedScheduleIds)
         {
             var schedule = await _context.Schedules
                 .Include(s => s.Enrollments)
@@ -89,14 +91,14 @@ public class EnrollmentController : Controller
             }
 
             // ✅ Check if student is already enrolled
-            bool isAlreadyEnrolled = schedule.Enrollments.Any(e => e.StudentId == studentId);
+            bool isAlreadyEnrolled = schedule.Enrollments.Any(e => e.StudentId == StudentId);
             if (isAlreadyEnrolled)
             {
                 messages.Add($"⚠ Student is already enrolled in {schedule.Subject.Name}.");
                 continue;
             }
 
-            // ✅ Ensure Schedule is Not Full (If you have capacity)
+            // ✅ Ensure Schedule is Not Full
             if (schedule.Capacity > 0 && schedule.Enrollments.Count >= schedule.Capacity)
             {
                 messages.Add($"❌ {schedule.Subject.Name} is full.");
@@ -104,7 +106,7 @@ public class EnrollmentController : Controller
             }
 
             // ✅ Enroll the Student
-            _context.Enrollments.Add(new Enrollment { ScheduleId = scheduleId, StudentId = studentId });
+            _context.Enrollments.Add(new Enrollment { ScheduleId = scheduleId, StudentId = StudentId });
             messages.Add($"✅ Student successfully enrolled in {schedule.Subject.Name}.");
         }
 
