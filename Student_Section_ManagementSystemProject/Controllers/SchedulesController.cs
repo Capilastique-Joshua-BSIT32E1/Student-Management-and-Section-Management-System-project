@@ -63,9 +63,10 @@ public class SchedulesController : Controller
 
         // ✅ Prevent Conflict in Different Subjects (Same Time)
         bool isTimeConflict = await _context.Schedules.AnyAsync(s =>
-            s.StartTime < schedule.EndTime &&
-            s.EndTime > schedule.StartTime
-        );
+    s.SubjectId != schedule.SubjectId && // ✅ Prevent the same subject from checking itself
+    s.StartTime < schedule.EndTime &&
+    s.EndTime > schedule.StartTime
+);
 
         if (isTimeConflict)
         {
