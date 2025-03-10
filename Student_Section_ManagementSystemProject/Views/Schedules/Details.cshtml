@@ -1,0 +1,209 @@
+﻿@model Student_Section_ManagementSystemProject.Models.Schedule
+
+<h2>@Model.Subject.Name - Schedule Details</h2>
+
+@if (TempData["EnrollmentSuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["EnrollmentSuccessMessage"]
+    </div>
+}
+@if (TempData["EnrollmentErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["EnrollmentErrorMessage"]
+    </div>
+}
+
+<script>
+    setTimeout(function () {
+        let successBox = document.getElementById('successMessage');
+        let errorBox = document.getElementById('errorMessage');
+
+        if (successBox) {
+            successBox.style.display = 'none';
+        }
+
+        if (errorBox) {
+            errorBox.style.display = 'none';
+        }
+    }, 2000); // Hides after 2 seconds
+</script>
+
+
+<a class="add-button" href="@Url.Action("Create", "Students")">+ Student</a>
+
+<h4>Enroll New Student</h4>
+<form method="post" action="/Enrollments/Enroll" id="enroll-form">
+    <input type="hidden" name="scheduleId" value="@Model.Id" />
+
+    <select name="studentId" class="form-control">
+        @foreach (var student in ViewBag.Students)
+        {
+            <option value="@student.Id">@student.Name - @student.Email</option>
+        }
+    </select>
+
+    <button type="submit" class="btn btn-primary" style="margin-top: 10px;">
+        Enroll Student
+    </button>
+</form>
+
+<hr />
+
+<h4>Enrolled Students</h4>
+
+<table class="student-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.EnrolledStudents != null && Model.EnrolledStudents.Count > 0)
+        {
+            int count = 1;
+            @foreach (var student in Model.EnrolledStudents)
+            {
+                <tr>
+                    <td style="text-align:center;">@count</td>
+                    <td>@student.Name</td>
+                    <td>@student.Email</td>
+                    <td style="text-align:center;">
+                        <form method="post" action="/Enrollments/Remove" style="display:inline;">
+                            <input type="hidden" name="scheduleId" value="@Model.Id" />
+                            <input type="hidden" name="studentId" value="@student.Id" />
+                            <button type="submit" class="btn btn-danger">
+                                Remove
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                count++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4" style="text-align:center; color:red;">
+                    No students enrolled in this schedule.
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<br />
+<a href="/Schedules/Index" class="btn btn-secondary">Back to Schedules</a>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 5px;
+        padding: 20px;
+    }
+
+    h2 {
+        color: #333;
+        text-align: center;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    .add-button {
+        display: inline-block;
+        background-color: skyblue;
+        color: black;
+        padding: 5px 8px;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        margin-left: 88%;
+    }
+
+        .add-button:hover {
+            background-color: steelblue;
+            color: white;
+        }
+
+    .student-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+        .student-table th, .student-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .student-table th {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+        }
+
+        .student-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+    .alert {
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        text-align: center;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .alert-success {
+        background-color: #28a745;
+    }
+
+    .alert-danger {
+        background-color: #dc3545;
+    }
+
+    select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+    }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+    .btn-danger {
+        background-color: #dc3545;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+</style>

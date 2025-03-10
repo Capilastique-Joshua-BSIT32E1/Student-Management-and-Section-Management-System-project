@@ -1,0 +1,125 @@
+﻿@model Subject
+
+@{
+    ViewData["Title"] = "Edit Subject";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 5px;
+        padding: 20px;
+    }
+
+    h2 {
+        color: #333;
+        text-align: center;
+        margin-top: 50px;
+        margin-bottom: 30px;
+    }
+
+    .edit-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .edit-card {
+        background: white;
+        padding: 25px;
+        width: 380px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-row {
+        margin-bottom: 18px;
+    }
+
+        .form-row label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .form-row input,
+        .form-row textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+    .text-danger {
+        color: red;
+        font-size: 14px;
+    }
+
+    .form-actions {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .save-button {
+        width: 100%;
+        background-color: skyblue;
+        color: black;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+        .save-button:hover {
+            background-color: steelblue;
+            color: white;
+        }
+</style>
+
+<h2>Edit Subject</h2>
+
+
+@if (TempData["StudentErrorMessage"] != null)
+{
+    <div class="alert alert-danger" id="errorMessage">
+        @TempData["StudentErrorMessage"]
+    </div>
+}
+
+<script>
+    setTimeout(function () {
+        let errorBox = document.getElementById('errorMessage');
+
+        if (errorBox) {
+            errorBox.style.display = 'none';
+        }
+    }, 4000); // Hides after 2 seconds
+</script>
+
+
+<div class="edit-container">
+    <div class="edit-card">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-row">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-row">
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" class="form-control" required></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="save-button">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
