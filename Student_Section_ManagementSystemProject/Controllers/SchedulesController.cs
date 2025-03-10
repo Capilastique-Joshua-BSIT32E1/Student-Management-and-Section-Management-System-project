@@ -4,7 +4,7 @@ using Student_Section_ManagementSystemProject.Data;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Student_Section_ManagementSystemProject.Models; 
+using Student_Section_ManagementSystemProject.Models;
 
 public class SchedulesController : Controller
 {
@@ -15,21 +15,21 @@ public class SchedulesController : Controller
         _context = context;
     }
 
-    // Display List of Schedules
+    // ✅ Display List of Schedules
     public async Task<IActionResult> Index()
     {
         var schedules = await _context.Schedules.Include(s => s.Subject).ToListAsync();
         return View(schedules);
     }
 
-    // Show Form to Create Schedule
+    // ✅ Show Form to Create Schedule
     public IActionResult Create()
     {
         ViewBag.Subjects = _context.Subjects.ToList();
         return View();
     }
 
-    // Store Schedule
+    // ✅ Store Schedule
     [HttpPost]
     public async Task<IActionResult> Create(Schedule schedule)
     {
@@ -47,7 +47,7 @@ public class SchedulesController : Controller
             return View(schedule);
         }
 
-        // ✅ Prevent Exact Duplicate Schedules
+        // ✅ Prevent Exact Duplicate Schedules for the SAME Subject
         bool isDuplicate = await _context.Schedules.AnyAsync(s =>
             s.SubjectId == schedule.SubjectId &&
             s.StartTime == schedule.StartTime &&
@@ -56,7 +56,20 @@ public class SchedulesController : Controller
 
         if (isDuplicate)
         {
-            TempData["ScheduleErrorMessage"] = "This schedule already exists.";
+            TempData["ScheduleErrorMessage"] = "This schedule already exists for this subject.";
+            ViewBag.Subjects = _context.Subjects.ToList();
+            return View(schedule);
+        }
+
+        // ✅ Prevent Conflict in Different Subjects (Same Time)
+        bool isTimeConflict = await _context.Schedules.AnyAsync(s =>
+            s.StartTime < schedule.EndTime &&
+            s.EndTime > schedule.StartTime
+        );
+
+        if (isTimeConflict)
+        {
+            TempData["ScheduleErrorMessage"] = "This time slot is already taken by another subject.";
             ViewBag.Subjects = _context.Subjects.ToList();
             return View(schedule);
         }
@@ -64,13 +77,12 @@ public class SchedulesController : Controller
         _context.Schedules.Add(schedule);
         await _context.SaveChangesAsync();
 
-        Console.WriteLine($"✅ Schedule Created! Total Schedules: {_context.Schedules.Count()}");
-
-        // ✅ Store success message
+        // ✅ Success Message
         TempData["ScheduleSuccessMessage"] = "Schedule added successfully!";
         return RedirectToAction("Index");
     }
 
+    // ✅ Display Schedule Details
     public IActionResult Details(int id)
     {
         var schedule = _context.Schedules
@@ -81,13 +93,9 @@ public class SchedulesController : Controller
         if (schedule == null)
             return NotFound();
 
-        ViewBag.Students = _context.Students
-            .Where(s => s.ScheduleId == null) // Only students without a schedule
-            .ToList();
+        // ✅ Allow ALL students to enroll (no restrictions)
+        ViewBag.Students = _context.Students.ToList();
 
         return View(schedule);
     }
-
-
-
 }

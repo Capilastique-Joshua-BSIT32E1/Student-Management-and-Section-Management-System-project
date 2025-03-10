@@ -12,17 +12,17 @@
         <th>Subject</th>
         <th>Start Time</th>
         <th>End Time</th>
+        <th>Enroll Students</th>
     </tr>
     @foreach (var schedule in Model)
     {
         <tr>
             <td>@(schedule.Subject != null ? schedule.Subject.Name : "No Subject")</td>
-            <td>@schedule.StartTime.ToString("MMM/dd/yyy      hh:mm tt")</td>
-            <td>@schedule.EndTime.ToString("MMM/dd/yyy      hh:mm tt")</td>
-            <td>@schedule.Capacity</td>
+            <td>@schedule.StartTime.ToString("MM/dd/yyy      hh:mm tt")</td>
+            <td>@schedule.EndTime.ToString("MM/dd/yyy      hh:mm tt")</td>
             <td>
                 <a href="/Schedules/Details/@schedule.Id" class="btn btn-primary">
-                    View Details
+                    Enroll
                 </a>
             </td>
         </tr>
